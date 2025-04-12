@@ -2,13 +2,19 @@ from dotenv import load_dotenv
 from openai import OpenAI
 import os
 import string 
+import sys
+
+if sys.argv[1] == None:
+    print("You must ask perplexity a question. Run again")
+elif sys.argv:
+    your_question = sys.argv[1]
 
 # Load environment variables from .env file
 load_dotenv()
 #
 YOUR_API_KEY = os.environ["API_KEY"]
 
-your_question = input("What would you like to ask? ")
+#your_question = input("What would you like to ask? ")
 
 messages = [
     {
