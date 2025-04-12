@@ -13,7 +13,6 @@ venv/
 .env-*
 
 # Ignore specific files
-start.sh
 
 # Unit test / coverage reports
 .tox/
