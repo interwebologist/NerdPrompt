@@ -1,20 +1,27 @@
+from dotenv import load_dotenv
 from openai import OpenAI
 import os
+import string 
 
+# Load environment variables from .env file
+load_dotenv()
+#
 YOUR_API_KEY = os.environ["API_KEY"]
+
+your_question = input("What would you like to ask? ")
 
 messages = [
     {
         "role": "system",
         "content": (
-            "You are an artificial intelligence assistant and you need to "
-            "engage in a helpful, detailed, polite conversation with a user."
+         """You are an artificial intelligence assistant and you need to
+            engage in a helpful, detailed, polite conversation with a user."""
         ),
     },
     {   
         "role": "user",
         "content": (
-            "How many stars are in the universe?"
+            your_question
         ),
     },
 ]
@@ -25,14 +32,7 @@ client = OpenAI(api_key=YOUR_API_KEY, base_url="https://api.perplexity.ai")
 response = client.chat.completions.create(
     model="sonar-pro",
     messages=messages,
+#    stream=True, #Streaming disabled
 )
-print(response)
 
-# chat completion with streaming
-response_stream = client.chat.completions.create(
-    model="sonar-pro",
-    messages=messages,
-    stream=True,
-)
-for response in response_stream:
-    print(response)
+print(response.choices[0].message.content)
