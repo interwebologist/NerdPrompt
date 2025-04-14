@@ -1,3 +1,5 @@
+<img src="https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png" class="logo" width="120"/>
+
 # Perplexed Terminal
 
 **Perplexity.ai formatted in terminal with emoji and ANSI formatting**
@@ -10,11 +12,11 @@ Welcome to **Perplexed Terminal**, a Python-based project that brings the power 
 
 - **Emoji-enhanced bullet points** for a fun and engaging experience.
 - **Multi-colored headers** using ANSI formatting:
-  - Green for `# Header`
-  - Blue for `## Subheader`
-  - Red for `### Sub-subheader`
+    - Green for `# Header`
+    - Blue for `## Subheader`
+    - Red for `### Sub-subheader`
 - Supports **bold**, *italic*, and ***bold italic*** text rendered directly in the terminal.
-- Removes citation markers like `[1]` for a cleaner output.
+- Removes citation markers like `[^1]` for a cleaner output.
 - Easy-to-use interface for querying Perplexity.ai.
 
 ---
@@ -24,15 +26,17 @@ Welcome to **Perplexed Terminal**, a Python-based project that brings the power 
 Follow these steps to install **Perplexed Terminal**:
 
 1. Clone the repository:
-   ```bash
-   git clone https://github.com/your-repo/perplexed-terminal.git
-   cd perplexed-terminal
-   ```
+
+```bash
+git clone https://github.com/your-repo/perplexed-terminal.git
+cd perplexed-terminal
+```
 
 2. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+
+```bash
+pip install -r requirements.txt
+```
 
 3. Set up your API key (see below).
 
@@ -53,14 +57,16 @@ To use **Perplexed Terminal**, you need an API key from Perplexity.ai. Here's ho
 ## 🛠️ Configuring Your API Key
 
 1. Create a `.env` file in the project directory:
-   ```bash
-   touch .env
-   ```
+
+```bash
+touch .env
+```
 
 2. Add your API key to the `.env` file:
-   ```plaintext
-   API_KEY=your_api_key_here
-   ```
+
+```plaintext
+API_KEY=your_api_key_here
+```
 
 3. The project will automatically load the key from the `.env` file when you run it.
 
@@ -74,8 +80,19 @@ Run the script with your query as an argument:
 python perplexed_terminal.py "What is the capital of France?"
 ```
 
+
 ### Example Output:
 
+```plaintext
+# 🌟 Paris
+Paris is the capital city of France.
+
+## 🗺️ Geography
+Located along the Seine River, Paris is known for its iconic landmarks like the Eiffel Tower.
+
+### 🎨 Culture
+Paris is also a global center for art, fashion, and gastronomy.
+```
 
 ---
 
@@ -84,13 +101,13 @@ python perplexed_terminal.py "What is the capital of France?"
 The tool supports rich Markdown formatting with ANSI colors:
 
 - **Headers** are styled with different colors:
-  - Green for `# Header`
-  - Blue for `## Subheader`
-  - Red for `### Sub-subheader`
+    - Green for `# Header`
+    - Blue for `## Subheader`
+    - Red for `### Sub-subheader`
 - Text styling includes:
-  - **Bold**
-  - *Italic*
-  - ***Bold Italic***
+    - **Bold**
+    - *Italic*
+    - ***Bold Italic***
 - Emoji-enhanced bullet points like 🚀, 🔥, and ✨ add personality to your terminal output.
 
 ---
@@ -116,4 +133,6 @@ For further assistance, consult [Perplexity's Help Center](https://www.perplexit
 ---
 
 Enjoy using **Perplexed Terminal**! 🚀
+
+<div>⁂</div>
 
