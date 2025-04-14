@@ -6,8 +6,10 @@ import sys
 import re
  
 class PerplexityWrapper:
+    def __init__(self, api_key):
+        self.api_key = api_key
  
-    def client(self, key, your_question):
+    def client(self, your_question):
         messages = [
             {
                 "role": "system",
@@ -25,7 +27,7 @@ class PerplexityWrapper:
             },
         ]
         
-        client = OpenAI(api_key=YOUR_API_KEY, base_url="https://api.perplexity.ai")
+        client = OpenAI(api_key=self.api_key, base_url="https://api.perplexity.ai")
     
         # chat completion without streaming
         response = client.chat.completions.create(
@@ -101,9 +103,9 @@ def main():
     elif sys.argv:
         your_question = sys.argv[1]
 
-    perplexity_client = PerplexityWrapper()
+    perplexity_client = PerplexityWrapper(YOUR_API_KEY)
 
-    response = perplexity_client.client(YOUR_API_KEY, your_question)  
+    response = perplexity_client.client(your_question)  
     term_text = perplexity_client.markdown_to_ansi(response.choices[0].message.content)
     print(term_text)
 
