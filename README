@@ -1,0 +1,119 @@
+# Perplexed Terminal
+
+**Perplexity.ai formatted in terminal with emoji and ANSI formatting**
+
+Welcome to **Perplexed Terminal**, a Python-based project that brings the power of Perplexity.ai into your terminal. This tool allows you to query Perplexity.ai and receive beautifully formatted responses with emojis, ANSI colors, and Markdown styling directly in your terminal.
+
+---
+
+## 🚀 Features
+
+- **Emoji-enhanced bullet points** for a fun and engaging experience.
+- **Multi-colored headers** using ANSI formatting:
+  - Green for `# Header`
+  - Blue for `## Subheader`
+  - Red for `### Sub-subheader`
+- Supports **bold**, *italic*, and ***bold italic*** text rendered directly in the terminal.
+- Removes citation markers like `[1]` for a cleaner output.
+- Easy-to-use interface for querying Perplexity.ai.
+
+---
+
+## 🔧 Installation
+
+Follow these steps to install **Perplexed Terminal**:
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo/perplexed-terminal.git
+   cd perplexed-terminal
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Set up your API key (see below).
+
+---
+
+## 🔑 Setting Up Your API Key
+
+To use **Perplexed Terminal**, you need an API key from Perplexity.ai. Here's how to get it:
+
+1. **Log in to Perplexity.ai**: Visit [www.perplexity.ai](https://www.perplexity.ai) and log in to your account.
+2. **Navigate to Settings**: Click on the **Settings** icon (bottom-left corner).
+3. **Access the API Tab**: Select the **API** tab from the menu.
+4. **Generate or Copy Your API Key**: Click "Generate API Key" if you don't already have one, or copy your existing key.
+5. Save your API key securely.
+
+---
+
+## 🛠️ Configuring Your API Key
+
+1. Create a `.env` file in the project directory:
+   ```bash
+   touch .env
+   ```
+
+2. Add your API key to the `.env` file:
+   ```plaintext
+   API_KEY=your_api_key_here
+   ```
+
+3. The project will automatically load the key from the `.env` file when you run it.
+
+---
+
+## 🖥️ Usage Instructions
+
+Run the script with your query as an argument:
+
+```bash
+python perplexed_terminal.py "What is the capital of France?"
+```
+
+### Example Output:
+
+
+---
+
+## ✨ Markdown Formatting in Terminal
+
+The tool supports rich Markdown formatting with ANSI colors:
+
+- **Headers** are styled with different colors:
+  - Green for `# Header`
+  - Blue for `## Subheader`
+  - Red for `### Sub-subheader`
+- Text styling includes:
+  - **Bold**
+  - *Italic*
+  - ***Bold Italic***
+- Emoji-enhanced bullet points like 🚀, 🔥, and ✨ add personality to your terminal output.
+
+---
+
+## 💡 Best Practices
+
+- Keep your API key private—do not share it publicly.
+- Ensure you have sufficient credits in your Perplexity.ai account to make queries.
+- Use Python 3.8 or higher for compatibility.
+
+---
+
+## ❓ Troubleshooting
+
+If you encounter issues:
+
+1. Ensure your `.env` file contains a valid API key.
+2. Verify that all dependencies are installed (`pip install -r requirements.txt`).
+3. Check your Perplexity.ai account for sufficient credits or active API keys.
+
+For further assistance, consult [Perplexity's Help Center](https://www.perplexity.ai/help-center).
+
+---
+
+Enjoy using **Perplexed Terminal**! 🚀
+
