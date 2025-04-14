@@ -90,8 +90,7 @@ class PerplexityWrapper:
         markdown_text = re.sub(r'^\s*[-*+]\s*', f" {UNICODE_CODES['green_dot']} ", markdown_text, flags=re.MULTILINE)
     
         return markdown_text
-    
-if __name__  == "__main__":
+def main():
     # Load environment variables from .env file
     load_dotenv()
     
@@ -107,4 +106,8 @@ if __name__  == "__main__":
     response = perplexity_client.client(YOUR_API_KEY, your_question)  
     term_text = perplexity_client.markdown_to_ansi(response.choices[0].message.content)
     print(term_text)
+
+
+if __name__ == "__main__":
+    main()
 
