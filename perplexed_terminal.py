@@ -98,7 +98,33 @@ class PerplexityWrapper:
         clean_response = re.sub(r'\[\d+\]', '', dirty_response)
         return clean_response
 
+    # Scrub code from the text to avoid turn comments in headers.
+    def code_extractor(self, text):
+        code_blocks = []
+        code_block_count = 0
+        
+        pattern = r'```[\s\S]*?```'
+        while True:
+            match = re.search(pattern, text)
+            if match:
+                code_blocks.append(match.group(0))
+                escaped_string = re.escape(match.group(0))
+                text = re.sub(escaped_string, f'<CODE__REMOVED__{code_block_count}>', text, count=1, flags=re.DOTALL)
+                code_block_count = code_block_count+1
+            else:
+                return {"text": text,"code_blocks": code_blocks }
+    
+    # Takes dict with doc and code blocks and puts them back together.
+    # Stylize header before this functions or Python comments become headers
+    def code_injector(self, doc_and_code_blocks):
+        input_text = doc_and_code_blocks['new_text']
+        code_block_count = 0
+        for code_block in doc_and_code_blocks['code_blocks']:
+                input_text = input_text.replace(f'<CODE__REMOVED__{code_block_count}>',code_block)
+                code_block_count = code_block_count+1
+        return input_text 
 def main():
+    #sys.argv[1] = "show me the smallest OOP python script you can "
     try:
         # Load environment variables from .env file
         load_dotenv()
@@ -111,37 +137,25 @@ def main():
         print('Usage: python ask_perplexity.py "your question here"')
         sys.exit(1)
     try:
-        your_question = sys.argv[1]
+        #your_question = sys.argv[1]
+        your_question = "show me the smallest oop python script you can "#sys.argv[1]
     except ValueError:
         print('Use qoutes: python ask_perplexity.py "your question here"')
     try:
         perplexity_client = PerplexityWrapper(YOUR_API_KEY)
         response = perplexity_client.client(your_question)
-        ansi_text = perplexity_client.markdown_to_ansi(response.choices[0].message.content)
-        no_citation_ansi_text = perplexity_client.remove_citations(ansi_text)
+        content = response.choices[0].message.content
+        doc_wo_code = perplexity_client.code_extractor(content)
+        doc_no_code = doc_wo_code['text']
+        ansi_text = perplexity_client.markdown_to_ansi(doc_no_code)
+        ansi_doc_no_code = doc_wo_code
+        ansi_doc_no_code['new_text'] = ansi_text
+        doc_with_code = perplexity_client.code_injector(ansi_doc_no_code)
+        no_citation_ansi_text = perplexity_client.remove_citations(doc_with_code)
         print(no_citation_ansi_text)
     except Exception as e:
         print(f"An error occurred: {e}")
-
-
-
-
-#    load_dotenv()
-#    
-#    YOUR_API_KEY = os.environ["API_KEY"]
-#    
-#    if sys.argv[1] == None:
-#        print('run ask_perplexity.py "what is the weather in LA today?"')
-#    elif sys.argv:
-#        your_question = sys.argv[1]
-#
-#    perplexity_client = PerplexityWrapper(YOUR_API_KEY)
-#
-#    response = perplexity_client.client(your_question)  
-#    term_text = perplexity_client.markdown_to_ansi(response.choices[0].message.content)
-#    print(term_text)
-
-
+    
 if __name__ == "__main__":
+    
     main()
-
