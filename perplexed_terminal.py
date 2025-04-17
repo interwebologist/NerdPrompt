@@ -90,7 +90,7 @@ class PerplexityWrapper:
         ### Unicode Codes
     
         # Divider --- 
-        markdown_text = re.sub(r'\-\-\-', 
+        markdown_text = re.sub(r'^\-\-\-$', 
                                f"{UNICODE_CODES['sparkles']}-----------{UNICODE_CODES['sparkles']}", 
                                markdown_text) 
         # Divider -*+ bullets 
@@ -122,12 +122,13 @@ class PerplexityWrapper:
 # Takes dict with doc and code blocks and puts them back together.
     # Stylize header before this functions or Python comments become headers
     def code_injector(self, doc_and_code_blocks):
-        input_text = doc_and_code_blocks['new_text']
+        md_without_code = doc_and_code_blocks['ansi_converted_text']
         code_block_count = 0
         for code_block in doc_and_code_blocks['code_blocks']:
-                input_text = input_text.replace(f'<CODE__REMOVED__{code_block_count}>',code_block)
+                md_without_code = md_without_code.replace(f'<CODE__REMOVED__{code_block_count}>',code_block)
                 code_block_count = code_block_count+1
-        return input_text 
+        md_with_code = md_without_code
+        return md_with_code
 
 class CodeProcesser:    
     # remove code type (```python.....````) from markup and split out code for syntax highligting 
@@ -149,15 +150,18 @@ class CodeProcesser:
                 lexer = guess_lexer(code_type_and_syntax['code_syntax'])   
         finally:
             formatter = TerminalFormatter()
-            highlighted_code = highlight(code_type_and_syntax['code_syntax'], lexer, formatter)
-            
-        return highlighted_code
+        highlighted_code = highlight(code_type_and_syntax['code_syntax'], lexer, formatter)
+        code_type_and_syntax['highlighted_code'] = highlighted_code
+        return code_type_and_syntax
 
     #We need to piece the highlighted markdown back together ```python\n<code>``` and put it 
     #back in doc converted to ANSI so are code display highlighted
     def rebuild_code_type_and_syntax(self, extracted_code):
-        highlighted_code=f"```{extracted_code['code_type']}{extracted_code['code_syntax']}```"
-        return highlighted_code
+        code_type = extracted_code['code_type']
+        code_syntax = extracted_code['highlighted_code']
+        #rebuilt_code=f"```{code_type}{code_syntax}```"
+        rebuilt_code=f"{code_type}code\n{code_syntax}"
+        return rebuilt_code
     
 
 def main():
@@ -175,19 +179,19 @@ def main():
         sys.exit(1)
     try:
         #your_question = sys.argv[1]
-        your_question = "show me the smallest oop python script you can "#sys.argv[1]
+        your_question = "show me a oop python script and explain self,cls staticmethods, etc" #sys.argv[1]
     except ValueError:
         print('Use qoutes: python ask_perplexity.py "your question here"')
     try:
         perplexity_client = PerplexityWrapper(YOUR_API_KEY)
         response = perplexity_client.client(your_question)
         content = response.choices[0].message.content
+        print(content)
         doc_wo_code = perplexity_client.code_extractor(content)
         
         doc_no_code_str = doc_wo_code['text'] #doc without code
         ansi_text = perplexity_client.markdown_to_ansi(doc_no_code_str) #doc with no code converted to ANSI
         doc_wo_code['ansi_converted_text'] = ansi_text #adding a new value for the new_text thats ansi converted
-        #print(ansi_doc_no_code) 
         
         code_processing = CodeProcesser()
         rebuilt_code_blocks = []
@@ -198,6 +202,7 @@ def main():
             rebuilt_code_blocks.append(rebuilt_code)
             # Replace the original code_blocks with the rebuilt ones
         doc_wo_code['code_blocks'] = rebuilt_code_blocks
+        print("doc_wo_code :  ",print(doc_wo_code.keys()))
 
         doc_with_code = perplexity_client.code_injector(doc_wo_code)
         no_citation_ansi_text = perplexity_client.remove_citations(doc_with_code)
