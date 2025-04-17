@@ -1,4 +1,9 @@
+import traceback
+from pygments import highlight
+from pygments.lexers import guess_lexer, get_lexer_by_name
+from pygments.formatters import TerminalFormatter
 from dotenv import load_dotenv
+import pygments
 from openai import OpenAI
 import os
 import string 
@@ -113,8 +118,8 @@ class PerplexityWrapper:
                 code_block_count = code_block_count+1
             else:
                 return {"text": text,"code_blocks": code_blocks }
-    
-    # Takes dict with doc and code blocks and puts them back together.
+
+# Takes dict with doc and code blocks and puts them back together.
     # Stylize header before this functions or Python comments become headers
     def code_injector(self, doc_and_code_blocks):
         input_text = doc_and_code_blocks['new_text']
@@ -123,6 +128,38 @@ class PerplexityWrapper:
                 input_text = input_text.replace(f'<CODE__REMOVED__{code_block_count}>',code_block)
                 code_block_count = code_block_count+1
         return input_text 
+
+class CodeProcesser:    
+    # remove code type (```python.....````) from markup and split out code for syntax highligting 
+    def extract_code_type_and_syntax(self, input_string):
+        pattern = r'```([A-Za-z]*)([\s\S.]*)```'  # Adjusted to handle closing ```
+        match = re.search(pattern, input_string, re.DOTALL)
+        if match:
+            return {
+                'code_type': match.group(1),
+                'code_syntax': match.group(2)
+            }
+        return None
+    
+    # Syntax highlighting the 'guts' for the code markdown.first try explict then guess
+    def syntax_highlighter(self, code_type_and_syntax):
+        try:
+            lexer = get_lexer_by_name(code_type_and_syntax['code_type'])
+        except:
+                lexer = guess_lexer(code_type_and_syntax['code_syntax'])   
+        finally:
+            formatter = TerminalFormatter()
+            highlighted_code = highlight(code_type_and_syntax['code_syntax'], lexer, formatter)
+            
+        return highlighted_code
+
+    #We need to piece the highlighted markdown back together ```python\n<code>``` and put it 
+    #back in doc converted to ANSI so are code display highlighted
+    def rebuild_code_type_and_syntax(self, extracted_code):
+        highlighted_code=f"```{extracted_code['code_type']}{extracted_code['code_syntax']}```"
+        return highlighted_code
+    
+
 def main():
     #sys.argv[1] = "show me the smallest OOP python script you can "
     try:
@@ -146,16 +183,30 @@ def main():
         response = perplexity_client.client(your_question)
         content = response.choices[0].message.content
         doc_wo_code = perplexity_client.code_extractor(content)
-        doc_no_code = doc_wo_code['text']
-        ansi_text = perplexity_client.markdown_to_ansi(doc_no_code)
-        ansi_doc_no_code = doc_wo_code
-        ansi_doc_no_code['new_text'] = ansi_text
-        doc_with_code = perplexity_client.code_injector(ansi_doc_no_code)
+        
+        doc_no_code_str = doc_wo_code['text'] #doc without code
+        ansi_text = perplexity_client.markdown_to_ansi(doc_no_code_str) #doc with no code converted to ANSI
+        doc_wo_code['ansi_converted_text'] = ansi_text #adding a new value for the new_text thats ansi converted
+        #print(ansi_doc_no_code) 
+        
+        code_processing = CodeProcesser()
+        rebuilt_code_blocks = []
+        for code in doc_wo_code['code_blocks']:
+            code_type_and_syntax = code_processing.extract_code_type_and_syntax(code)
+            highlighted_syntax = code_processing.syntax_highlighter(code_type_and_syntax)
+            rebuilt_code = code_processing.rebuild_code_type_and_syntax(highlighted_syntax)
+            rebuilt_code_blocks.append(rebuilt_code)
+            # Replace the original code_blocks with the rebuilt ones
+        doc_wo_code['code_blocks'] = rebuilt_code_blocks
+
+        doc_with_code = perplexity_client.code_injector(doc_wo_code)
         no_citation_ansi_text = perplexity_client.remove_citations(doc_with_code)
         print(no_citation_ansi_text)
     except Exception as e:
         print(f"An error occurred: {e}")
+        traceback.print_exc()
     
 if __name__ == "__main__":
     
     main()
+
