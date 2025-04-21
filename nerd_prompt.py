@@ -5,6 +5,7 @@ from pygments.formatters import TerminalFormatter
 from dotenv import load_dotenv
 import pygments
 from openai import OpenAI
+import yaml
 import os
 import string 
 import sys
@@ -48,6 +49,7 @@ class PerplexityWrapper:
             'bold': '\033[1m',
             'italic': '\033[3m',
             'bold_italic': '\033[1;3m',
+            'underline': '\033[4m',
             'green': '\033[32m',
             'blue': '\033[34m',
             'red': '\033[31m',
@@ -162,7 +164,13 @@ class CodeProcesser:
         #rebuilt_code=f"```{code_type}{code_syntax}```"
         rebuilt_code=f"{code_type}code\n{code_syntax}"
         return rebuilt_code
-    
+
+class ConfigEater:
+     def parse_config(self)
+          with open('config.yaml', 'r') as f:
+              config = yaml.safe_load(f)
+              openai_api_key = config['openai']['api_key']
+
 
 def main():
     #sys.argv[1] = "show me the smallest OOP python script you can "
