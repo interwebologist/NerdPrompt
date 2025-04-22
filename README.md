@@ -1,10 +1,10 @@
-# Perplexed Terminal
+# Nerd Prompt
 
 ![Perplexity Logo](https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png)
 
 **Perplexity.ai formatted in terminal with emoji and ANSI formatting**
 
-Welcome to **Perplexed Terminal**, a Python-based project that brings the power of Perplexity.ai into your terminal. This tool allows you to query Perplexity.ai and receive beautifully formatted responses with emojis, ANSI colors, and Markdown styling directly in your terminal.
+Welcome to **Nerd Prompt**, a Python-based project that brings the power of Perplexity.ai into your terminal. This tool allows you to query Perplexity.ai and receive beautifully formatted responses with emojis, ANSI colors, and Markdown styling directly in your terminal.
 
 ---
 
@@ -23,7 +23,7 @@ Welcome to **Perplexed Terminal**, a Python-based project that brings the power 
 
 ## 🔧 Installation
 
-Follow these steps to install **Perplexed Terminal**:
+Follow these steps to install **Nerd Prompt**:
 
 1. Clone the repository:
 
@@ -44,7 +44,7 @@ pip install -r requirements.txt
 
 ## 🔑 Setting Up Your API Key
 
-To use **Perplexed Terminal**, you need an API key from Perplexity.ai. Here's how to get it:
+To use **Nerd Prompt**, you need an API key from Perplexity.ai. Here's how to get it:
 
 1. **Log in to Perplexity.ai**: Visit [www.perplexity.ai](https://www.perplexity.ai) and log in to your account.
 2. **Navigate to Settings**: Click on the **Settings** icon (bottom-left corner).
@@ -132,7 +132,62 @@ For further assistance, consult [Perplexity's Help Center](https://www.perplexit
 
 ---
 
-Enjoy using **Perplexed Terminal**! 🚀
+Enjoy using **Nerd Prompt**! 🚀
 
 <div>⁂</div>
-
+# Pygment Python Library syntax styles setting. Mark code block will be colored with this theme
+# Check what these would look like by using the Pygment style checker. Check which syntax type
+# "Python" , etc and use the dropdown to check themes. https://pygments.org/demo/. If extra styles
+# are added just add them below in a new numbered line and set code_syntax_choice to style number.
+Code Syntax Highlighting Themes
+```
+  1: "abap"
+  2: "algol"
+  3: "algol_nu"
+  4: "arduino"
+  5: "autumn"
+  6: "bw"
+  7: "borland"
+  8: "coffee"
+  9: "colorful"
+  10: "default"
+  11: "dracula"
+  12: "emacs"
+  13: "friendly_grayscale"
+  14: "friendly"
+  15: "fruity"
+  16: "github-dark"
+  17: "gruvbox-dark"
+  18: "gruvbox-light"
+  19: "igor"
+  20: "inkpot"
+  21: "lightbulb"
+  22: "lilypond"
+  23: "lovelace"
+  24: "manni"
+  25: "material"
+  26: "monokai"
+  27: "murphy"
+  28: "native"
+  29: "nord-darker"
+  30: "nord"
+  31: "one-dark"
+  32: "paraiso-dark"
+  33: "paraiso-light"
+  34: "pastie"
+  35: "perldoc"
+  36: "rainbow_dash"
+  37: "rrt"
+  38: "sas"
+  39: "solarized-dark"
+  40: "solarized-light"
+  41: "staroffice"
+  42: "stata-dark"
+  43: "stata-light"
+  44: "tango"
+  45: "trac"
+  46: "vim"
+  47: "vs"
+  48: "xcode"
+  49: "zenburn"
+```

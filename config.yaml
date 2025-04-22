@@ -1,11 +1,17 @@
-header_1: [bold, green, underline ]
-header_2: [bold, blue ]
-header_3: [bold, red ]
-bullet_point_emoji: "\U0001F680" #Rocket Emoji 🚀. Use format \U0001F680 required for Python
-# ANSI Divider: Markdown divider "---" is removed and replaced with ANSI dividers below. Add a 
-# New divider to ansi_dividers and select it with ansi_divider_choice to enable it in the code
+llm_url: "https://api.perplexity.ai"
+llm_model: "sonar-pro"
+stream_output: true 
+code_syntax_theme: "one-dark"
+system_content: |  #Markdown respnses are important as this gots converted in ANSI, Icons, and Emojis
+  You are an artificial intelligence assistant and you will
+  engage in a helpful, detailed, conversation with a user while
+  using markdown for formatting
+bullet_point_unicode: "\U0001F680" #Rocket Emoji 🚀. Use format \U0001F680 required for Python
+header_1: [bold, red, underline ]
+header_2: [bold, green, underline ]
+header_3: [bold, blue , underline]
 ansi_divider_position: center # left , center , right
-ansi_divider_choice: 16 # Choose or create divider below
+ansi_divider_choice: 16 # Choose number or "random"
 ansi_dividers:
   1: "✧༺✦✮✦༻∞ ∞༺✦✮✦༻✧"
   2: "──── ⋆⋅☆⋅⋆ ────"
@@ -38,59 +44,3 @@ ansi_dividers:
   29: "~•~•~•~•~•~•~•~•~•~•~•~•~•~•~•~"
   30: "<><><><><><><><><><>"
   31: "-=☆=-=☆=-=☆=-=☆=-=☆=-=☆=-=☆=-=☆=-=☆"
-# Pygment Python Library syntax styles setting. Mark code block will be colored with this theme
-# Check what these would look like by using the Pygment style checker. Check which syntax type
-# "Python" , etc and use the dropdown to check themes. https://pygments.org/demo/. If extra styles
-# are added just add them below in a new numbered line and set code_syntax_choice to style number.
-code_syntax_choice: 31
-code_syntax_themes:
-  1: "abap"
-  2: "algol"
-  3: "algol_nu"
-  4: "arduino"
-  5: "autumn"
-  6: "bw"
-  7: "borland"
-  8: "coffee"
-  9: "colorful"
-  10: "default"
-  11: "dracula"
-  12: "emacs"
-  13: "friendly_grayscale"
-  14: "friendly"
-  15: "fruity"
-  16: "github-dark"
-  17: "gruvbox-dark"
-  18: "gruvbox-light"
-  19: "igor"
-  20: "inkpot"
-  21: "lightbulb"
-  22: "lilypond"
-  23: "lovelace"
-  24: "manni"
-  25: "material"
-  26: "monokai"
-  27: "murphy"
-  28: "native"
-  29: "nord-darker"
-  30: "nord"
-  31: "one-dark"
-  32: "paraiso-dark"
-  33: "paraiso-light"
-  34: "pastie"
-  35: "perldoc"
-  36: "rainbow_dash"
-  37: "rrt"
-  38: "sas"
-  39: "solarized-dark"
-  40: "solarized-light"
-  41: "staroffice"
-  42: "stata-dark"
-  43: "stata-light"
-  44: "tango"
-  45: "trac"
-  46: "vim"
-  47: "vs"
-  48: "xcode"
-  49: "zenburn"
-

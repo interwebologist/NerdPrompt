@@ -2,6 +2,7 @@ import traceback
 from pygments import highlight
 from pygments.lexers import guess_lexer, get_lexer_by_name
 from pygments.formatters import TerminalFormatter
+from cerberus import Validator
 from dotenv import load_dotenv
 import pygments
 from openai import OpenAI
@@ -166,11 +167,36 @@ class CodeProcesser:
         return rebuilt_code
 
 class ConfigEater:
-     def parse_config(self)
+    def parse_config(self):
           with open('config.yaml', 'r') as f:
               config = yaml.safe_load(f)
-              openai_api_key = config['openai']['api_key']
-
+              return config
+    def check_config(self, config_dict):
+        schema = {
+        'llm_url': {'type': 'string', 'required': True},
+        'llm_model': {'type': 'string', 'required': True},
+        'stream_output': {'type': 'boolean', 'required': True},
+        'code_syntax_theme': {'type': 'string', 'required': True},
+        'system_content': {'type': 'string', 'required': True},
+        'bullet_point_unicode': {'type': 'string', 'required': True},
+        'header_1': {'type': 'list', 'schema': {'type': 'string'}, 'required': True},
+        'header_2': {'type': 'list', 'schema': {'type': 'string'}, 'required': True},
+        'header_3': {'type': 'list', 'schema': {'type': 'string'}, 'required': True},
+        'ansi_divider_position': {'type': 'string', 'allowed': ['left', 'center', 'right'], 'required': True},
+        'ansi_divider_choice': {'type': 'integer', 'required': True},
+        'ansi_dividers': {
+            'type': 'dict',
+            'keysrules': {'type': 'integer'},
+            'valuesrules': {'type': 'string'},
+            'required': True
+        }
+        }
+    
+        v = Validator(schema)
+        is_valid = v.validate(config_dict)
+    
+        if not is_valid:
+            raise ValueError(f"Config validation error: {v.errors}") 
 
 def main():
     #sys.argv[1] = "show me the smallest OOP python script you can "
@@ -199,11 +225,11 @@ def main():
         
         doc_no_code_str = doc_wo_code['text'] #doc without code
         ansi_text = perplexity_client.markdown_to_ansi(doc_no_code_str) #doc with no code converted to ANSI
-        doc_wo_code['ansi_converted_text'] = ansi_text #adding a new value for the new_text thats ansi converted
+        doc_wo_code['ansi_converted_text'] = ansi_text #adding dict key for ANSI converted text
         
         code_processing = CodeProcesser()
         rebuilt_code_blocks = []
-        for code in doc_wo_code['code_blocks']:
+        for code in doc_wo_code['code_blocks']: #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ANSI text
             code_type_and_syntax = code_processing.extract_code_type_and_syntax(code)
             highlighted_syntax = code_processing.syntax_highlighter(code_type_and_syntax)
             rebuilt_code = code_processing.rebuild_code_type_and_syntax(highlighted_syntax)
