@@ -16,14 +16,12 @@ class PerplexityWrapper:
     def __init__(self, api_key):
         self.api_key = api_key
  
-    def client(self, your_question):
+    def client(self, config,  your_question):
         messages = [
             {
                 "role": "system",
                 "content": (
-                 """You are an artificial intelligence assistant and you will
-                    engage in a helpful, detailed, conversation with a user while 
-                    using markdown for formatting"""
+                 f"""{config['system_content']}"""
                 ),
             },
             {   
@@ -34,17 +32,17 @@ class PerplexityWrapper:
             },
         ]
         
-        client = OpenAI(api_key=self.api_key, base_url="https://api.perplexity.ai")
+        client = OpenAI(api_key=self.api_key, base_url=f"{config['llm_url']}")
     
         # chat completion without streaming
         response = client.chat.completions.create(
-            model="sonar-pro",
+            model=f"{config['llm_model']}",
             messages=messages,
         #    stream=True, #Streaming disabled
         )
         return response
     
-    def markdown_to_ansi(self, markdown_text):
+    def markdown_to_ansi(self, config, markdown_text):
         # Define ANSI escape codes for colors and styles
         ANSI_CODES = {
             'bold': '\033[1m',
@@ -63,7 +61,8 @@ class PerplexityWrapper:
             'sparkles' : '\U00012728',     # ✨ Sparkles
             'green_dot' : '\U0001F7E2'  # green dot
         }
-    
+        
+        #print(markdown_text)   
         # Convert headers to bold and colored
         markdown_text = re.sub(r'(?m)^# (.+)$', 
                                f"{ANSI_CODES['bold']}{ANSI_CODES['green']}\\1{ANSI_CODES['reset']}", 
@@ -90,15 +89,17 @@ class PerplexityWrapper:
                                f"{ANSI_CODES['italic']}\\1{ANSI_CODES['reset']}", 
                                markdown_text)
         
-        ### Unicode Codes
-    
-        # Divider --- 
-        markdown_text = re.sub(r'^\-\-\-$', 
-                               f"{UNICODE_CODES['sparkles']}-----------{UNICODE_CODES['sparkles']}", 
-                               markdown_text) 
         # Divider -*+ bullets 
-        markdown_text = re.sub(r'^\s*[-*+]\s*', f" {UNICODE_CODES['bullet']} ", markdown_text, flags=re.MULTILINE)
+        ansi_divider_choice = config['ansi_divider_choice']  
+        ansi_divider = config["ansi_dividers"][ansi_divider_choice]
+        # Divider --- 
+        markdown_text = re.sub(r'^---$', f"{ansi_divider}", markdown_text, flags = re.MULTILINE) 
+        #markdown_text = re.sub(r'^---$\n?', rf"{ansi_divider}\n", markdown_text, flags = re.MULTILINE) 
+        
+        markdown_text = re.sub(r'^\s*-\s+', f" {UNICODE_CODES['bullet']} ", markdown_text, flags=re.MULTILINE)
+        #markdown_text = re.sub(r'^\s*[-*+]\s*', f" {UNICODE_CODES['bullet']} ", markdown_text, flags=re.MULTILINE)
     
+        
         return markdown_text
     def remove_citations(self, dirty_response):
         
@@ -175,7 +176,7 @@ class ConfigEater:
         schema = {
         'llm_url': {'type': 'string', 'required': True},
         'llm_model': {'type': 'string', 'required': True},
-        'stream_output': {'type': 'boolean', 'required': True},
+        'remove_perplexity_citations': {'type': 'boolean', 'required': True},
         'code_syntax_theme': {'type': 'string', 'required': True},
         'system_content': {'type': 'string', 'required': True},
         'bullet_point_unicode': {'type': 'string', 'required': True},
@@ -199,7 +200,10 @@ class ConfigEater:
             raise ValueError(f"Config validation error: {v.errors}") 
 
 def main():
-    #sys.argv[1] = "show me the smallest OOP python script you can "
+    config_eater = ConfigEater()
+    config = config_eater.parse_config()
+    config_eater.check_config(config)
+    
     try:
         # Load environment variables from .env file
         load_dotenv()
@@ -213,18 +217,19 @@ def main():
         sys.exit(1)
     try:
         #your_question = sys.argv[1]
-        your_question = "show me a oop python script and explain self,cls staticmethods, etc" #sys.argv[1]
+        your_question = "show me denver weather using bullet points and dividers included" #sys.argv[1]
     except ValueError:
         print('Use qoutes: python ask_perplexity.py "your question here"')
     try:
         perplexity_client = PerplexityWrapper(YOUR_API_KEY)
-        response = perplexity_client.client(your_question)
+        
+        response = perplexity_client.client(config, your_question)
         content = response.choices[0].message.content
         print(content)
         doc_wo_code = perplexity_client.code_extractor(content)
         
         doc_no_code_str = doc_wo_code['text'] #doc without code
-        ansi_text = perplexity_client.markdown_to_ansi(doc_no_code_str) #doc with no code converted to ANSI
+        ansi_text = perplexity_client.markdown_to_ansi( config, doc_no_code_str) #doc with no code converted to ANSI
         doc_wo_code['ansi_converted_text'] = ansi_text #adding dict key for ANSI converted text
         
         code_processing = CodeProcesser()
@@ -236,10 +241,10 @@ def main():
             rebuilt_code_blocks.append(rebuilt_code)
             # Replace the original code_blocks with the rebuilt ones
         doc_wo_code['code_blocks'] = rebuilt_code_blocks
-        print("doc_wo_code :  ",print(doc_wo_code.keys()))
 
         doc_with_code = perplexity_client.code_injector(doc_wo_code)
         no_citation_ansi_text = perplexity_client.remove_citations(doc_with_code)
+        print(repr(no_citation_ansi_text))
         print(no_citation_ansi_text)
     except Exception as e:
         print(f"An error occurred: {e}")

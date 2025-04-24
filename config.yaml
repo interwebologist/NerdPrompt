@@ -1,6 +1,6 @@
 llm_url: "https://api.perplexity.ai"
 llm_model: "sonar-pro"
-stream_output: true 
+remove_perplexity_citations: true
 code_syntax_theme: "one-dark"
 system_content: |  #Markdown respnses are important as this gots converted in ANSI, Icons, and Emojis
   You are an artificial intelligence assistant and you will
@@ -11,7 +11,7 @@ header_1: [bold, red, underline ]
 header_2: [bold, green, underline ]
 header_3: [bold, blue , underline]
 ansi_divider_position: center # left , center , right
-ansi_divider_choice: 16 # Choose number or "random"
+ansi_divider_choice: 37  # Choose number or "random"
 ansi_dividers:
   1: "✧༺✦✮✦༻∞ ∞༺✦✮✦༻✧"
   2: "──── ⋆⋅☆⋅⋆ ────"
@@ -44,3 +44,13 @@ ansi_dividers:
   29: "~•~•~•~•~•~•~•~•~•~•~•~•~•~•~•~"
   30: "<><><><><><><><><><>"
   31: "-=☆=-=☆=-=☆=-=☆=-=☆=-=☆=-=☆=-=☆=-=☆"
+  32: "¯\_(ツ)_/¯¯\_(ツ)_/¯¯\_(ツ)_/¯"
+  34: "=^..^=   =^..^=   =^..^=    =^..^=    =^..^=    =^..^=    =^..^="
+  35: ".oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo.oOo."
+  36: "‧˚₊꒷꒦︶︶︶︶︶꒷꒦︶︶︶︶︶꒦꒷‧₊˚⊹"
+  37: "⊹˚₊‧─────────────────────────────────────────────────────‧₊˚⊹"
+  38: "⛧ · · ─────── ·☽◯☾· ─────── · · ⛧"
+  39: "⛧─── ⋆⋅☆⋅⋆ ───⛧"
+  40: "•─────⋅☾ ☽⋅─────•"
+  41: "━━━━━━━━━▼━━━━━━━━━"
+  42: "⭒☆━━━━━━━━━━━━━━━☆⭒"
