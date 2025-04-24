@@ -1,7 +1,7 @@
 llm_url: "https://api.perplexity.ai"
 llm_model: "sonar-pro"
 remove_perplexity_citations: true
-code_syntax_theme: "one-dark"
+code_syntax_theme: "dracula"
 system_content: |  #Markdown respnses are important as this gots converted in ANSI, Icons, and Emojis
   You are an artificial intelligence assistant and you will
   engage in a helpful, detailed, conversation with a user while
@@ -54,3 +54,4 @@ ansi_dividers:
   40: "•─────⋅☾ ☽⋅─────•"
   41: "━━━━━━━━━▼━━━━━━━━━"
   42: "⭒☆━━━━━━━━━━━━━━━☆⭒"
+  43: "‧˚₊꒷꒦︶︶︶︶︶ ¯\_(ツ)_/¯ ︶︶︶︶︶꒦꒷‧₊˚⊹"

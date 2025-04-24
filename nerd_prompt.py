@@ -1,7 +1,8 @@
 import traceback
 from pygments import highlight
 from pygments.lexers import guess_lexer, get_lexer_by_name
-from pygments.formatters import TerminalFormatter
+#from pygments.formatters import TerminalFormatter
+from pygments.formatters import Terminal256Formatter
 from cerberus import Validator
 from dotenv import load_dotenv
 import pygments
@@ -55,14 +56,6 @@ class PerplexityWrapper:
             'reset': '\033[0m'
         }
     
-        UNICODE_CODES = {
-            'bullet': '\U0001F680',  # 🚀 Rocket
-            'fire': '\U0001F525',  # 🔥 Fire
-            'sparkles' : '\U00012728',     # ✨ Sparkles
-            'green_dot' : '\U0001F7E2'  # green dot
-        }
-        
-        #print(markdown_text)   
         # Convert headers to bold and colored
         markdown_text = re.sub(r'(?m)^# (.+)$', 
                                f"{ANSI_CODES['bold']}{ANSI_CODES['green']}\\1{ANSI_CODES['reset']}", 
@@ -89,16 +82,13 @@ class PerplexityWrapper:
                                f"{ANSI_CODES['italic']}\\1{ANSI_CODES['reset']}", 
                                markdown_text)
         
-        # Divider -*+ bullets 
+        # Divider choice 
         ansi_divider_choice = config['ansi_divider_choice']  
         ansi_divider = config["ansi_dividers"][ansi_divider_choice]
         # Divider --- 
         markdown_text = re.sub(r'^---$', f"{ansi_divider}", markdown_text, flags = re.MULTILINE) 
-        #markdown_text = re.sub(r'^---$\n?', rf"{ansi_divider}\n", markdown_text, flags = re.MULTILINE) 
-        
-        markdown_text = re.sub(r'^\s*-\s+', f" {UNICODE_CODES['bullet']} ", markdown_text, flags=re.MULTILINE)
-        #markdown_text = re.sub(r'^\s*[-*+]\s*', f" {UNICODE_CODES['bullet']} ", markdown_text, flags=re.MULTILINE)
-    
+        # Bullet -  
+        markdown_text = re.sub(r'^\s*-\s+', f" {config['bullet_point_unicode']} ", markdown_text, flags=re.MULTILINE)
         
         return markdown_text
     def remove_citations(self, dirty_response):
@@ -147,13 +137,14 @@ class CodeProcesser:
         return None
     
     # Syntax highlighting the 'guts' for the code markdown.first try explict then guess
-    def syntax_highlighter(self, code_type_and_syntax):
+    def syntax_highlighter(self, config, code_type_and_syntax):
         try:
             lexer = get_lexer_by_name(code_type_and_syntax['code_type'])
         except:
-                lexer = guess_lexer(code_type_and_syntax['code_syntax'])   
+            lexer = guess_lexer(code_type_and_syntax['code_syntax'])   
         finally:
-            formatter = TerminalFormatter()
+            #formatter = TerminalFormatter(style = f"{config['code_syntax_theme']}")
+            formatter = Terminal256Formatter(style = f"{config['code_syntax_theme']}")
         highlighted_code = highlight(code_type_and_syntax['code_syntax'], lexer, formatter)
         code_type_and_syntax['highlighted_code'] = highlighted_code
         return code_type_and_syntax
@@ -216,8 +207,8 @@ def main():
         print('Usage: python ask_perplexity.py "your question here"')
         sys.exit(1)
     try:
-        #your_question = sys.argv[1]
-        your_question = "show me denver weather using bullet points and dividers included" #sys.argv[1]
+        your_question = sys.argv[1]
+        #your_question = "show me denver weather using bullet points and dividers included" #sys.argv[1]
     except ValueError:
         print('Use qoutes: python ask_perplexity.py "your question here"')
     try:
@@ -225,7 +216,6 @@ def main():
         
         response = perplexity_client.client(config, your_question)
         content = response.choices[0].message.content
-        print(content)
         doc_wo_code = perplexity_client.code_extractor(content)
         
         doc_no_code_str = doc_wo_code['text'] #doc without code
@@ -236,7 +226,7 @@ def main():
         rebuilt_code_blocks = []
         for code in doc_wo_code['code_blocks']: #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ANSI text
             code_type_and_syntax = code_processing.extract_code_type_and_syntax(code)
-            highlighted_syntax = code_processing.syntax_highlighter(code_type_and_syntax)
+            highlighted_syntax = code_processing.syntax_highlighter(config, code_type_and_syntax)
             rebuilt_code = code_processing.rebuild_code_type_and_syntax(highlighted_syntax)
             rebuilt_code_blocks.append(rebuilt_code)
             # Replace the original code_blocks with the rebuilt ones
@@ -244,11 +234,10 @@ def main():
 
         doc_with_code = perplexity_client.code_injector(doc_wo_code)
         no_citation_ansi_text = perplexity_client.remove_citations(doc_with_code)
-        print(repr(no_citation_ansi_text))
         print(no_citation_ansi_text)
     except Exception as e:
         print(f"An error occurred: {e}")
-        traceback.print_exc()
+        traceback.print_exc() 
     
 if __name__ == "__main__":
     
