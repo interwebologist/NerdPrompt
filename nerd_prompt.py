@@ -1,7 +1,6 @@
 import traceback
 from pygments import highlight
 from pygments.lexers import guess_lexer, get_lexer_by_name
-#from pygments.formatters import TerminalFormatter
 from pygments.formatters import Terminal256Formatter
 from cerberus import Validator
 from dotenv import load_dotenv
@@ -83,10 +82,10 @@ class PerplexityWrapper:
                                markdown_text)
         
         # Divider choice 
-        ansi_divider_choice = config['ansi_divider_choice']  
-        ansi_divider = config["ansi_dividers"][ansi_divider_choice]
+        ascii_divider_choice = config['ascii_divider_choice']  
+        ascii_divider = config["ascii_dividers"][ascii_divider_choice]
         # Divider --- 
-        markdown_text = re.sub(r'^---$', f"{ansi_divider}", markdown_text, flags = re.MULTILINE) 
+        markdown_text = re.sub(r'^---$', f"{ascii_divider}", markdown_text, flags = re.MULTILINE) 
         # Bullet -  
         markdown_text = re.sub(r'^\s*-\s+', f" {config['bullet_point_unicode']} ", markdown_text, flags=re.MULTILINE)
         
@@ -174,9 +173,9 @@ class ConfigEater:
         'header_1': {'type': 'list', 'schema': {'type': 'string'}, 'required': True},
         'header_2': {'type': 'list', 'schema': {'type': 'string'}, 'required': True},
         'header_3': {'type': 'list', 'schema': {'type': 'string'}, 'required': True},
-        'ansi_divider_position': {'type': 'string', 'allowed': ['left', 'center', 'right'], 'required': True},
-        'ansi_divider_choice': {'type': 'integer', 'required': True},
-        'ansi_dividers': {
+        'ascii_divider_position': {'type': 'string', 'allowed': ['left', 'center', 'right'], 'required': True},
+        'ascii_divider_choice': {'type': 'integer', 'required': True},
+        'ascii_dividers': {
             'type': 'dict',
             'keysrules': {'type': 'integer'},
             'valuesrules': {'type': 'string'},
@@ -221,7 +220,9 @@ def main():
         doc_no_code_str = doc_wo_code['text'] #doc without code
         ansi_text = perplexity_client.markdown_to_ansi( config, doc_no_code_str) #doc with no code converted to ANSI
         doc_wo_code['ansi_converted_text'] = ansi_text #adding dict key for ANSI converted text
-        
+       
+        # todo: check code processing can happen when streaming since we cannot detect opening a closing markdown
+        # in events
         code_processing = CodeProcesser()
         rebuilt_code_blocks = []
         for code in doc_wo_code['code_blocks']: #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ANSI text
