@@ -85,7 +85,7 @@ class PerplexityWrapper:
         ascii_divider_choice = config['ascii_divider_choice']  
         ascii_divider = config["ascii_dividers"][ascii_divider_choice]
         # Divider --- 
-        markdown_text = re.sub(r'^---$', f"{ascii_divider}", markdown_text, flags = re.MULTILINE) 
+        markdown_text = re.sub(r'^---$', rf"{ascii_divider}", markdown_text, flags = re.MULTILINE) 
         # Bullet -  
         markdown_text = re.sub(r'^\s*-\s+', f" {config['bullet_point_unicode']} ", markdown_text, flags=re.MULTILINE)
         
@@ -112,7 +112,7 @@ class PerplexityWrapper:
             else:
                 return {"text": text,"code_blocks": code_blocks }
 
-# Takes dict with doc and code blocks and puts them back together.
+    # Takes dict with doc and code blocks and puts them back together.
     # Stylize header before this functions or Python comments become headers
     def code_injector(self, doc_and_code_blocks):
         md_without_code = doc_and_code_blocks['ansi_converted_text']
@@ -148,13 +148,15 @@ class CodeProcesser:
         code_type_and_syntax['highlighted_code'] = highlighted_code
         return code_type_and_syntax
 
-    #We need to piece the highlighted markdown back together ```python\n<code>``` and put it 
-    #back in doc converted to ANSI so are code display highlighted
-    def rebuild_code_type_and_syntax(self, extracted_code):
-        code_type = extracted_code['code_type']
+    # We need to piece the highlighted markdown back together ```python\n<code></code>``` and put it 
+    # back in doc converted to ANSI so  code displays highlighted
+    # Added config.yaml code_dividers. This surrounds code blocks and doesn't replace --- markdown
+    def rebuild_code_type_and_syntax(self, config, extracted_code):
+        code_type = extracted_code['code_type'].capitalize()
         code_syntax = extracted_code['highlighted_code']
-        #rebuilt_code=f"```{code_type}{code_syntax}```"
-        rebuilt_code=f"{code_type}code\n{code_syntax}"
+        code_divider_choice = config["code_divider_choice"]
+        code_divider = config["code_dividers"][code_divider_choice]
+        rebuilt_code=f"""{code_divider}\n{code_type} Code:\n{code_syntax}\n{code_divider}\n"""
         return rebuilt_code
 
 class ConfigEater:
@@ -180,7 +182,14 @@ class ConfigEater:
             'keysrules': {'type': 'integer'},
             'valuesrules': {'type': 'string'},
             'required': True
-        }
+        },
+        'code_divider_choice': {'type': 'integer', 'required': True},
+        'code_dividers': {
+            'type': 'dict',
+            'keysrules': {'type': 'integer'},
+            'valuesrules': {'type': 'string'},
+            'required': True
+        },
         }
     
         v = Validator(schema)
@@ -228,7 +237,7 @@ def main():
         for code in doc_wo_code['code_blocks']: #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ANSI text
             code_type_and_syntax = code_processing.extract_code_type_and_syntax(code)
             highlighted_syntax = code_processing.syntax_highlighter(config, code_type_and_syntax)
-            rebuilt_code = code_processing.rebuild_code_type_and_syntax(highlighted_syntax)
+            rebuilt_code = code_processing.rebuild_code_type_and_syntax( config, highlighted_syntax)
             rebuilt_code_blocks.append(rebuilt_code)
             # Replace the original code_blocks with the rebuilt ones
         doc_wo_code['code_blocks'] = rebuilt_code_blocks
