@@ -1,22 +1,21 @@
-# Nerd Prompt
+# NerdPrompt
 
-![Perplexity Logo](https://r2cdn.perplexity.ai/pplx-full-logo-primary-dark%402x.png)
+**AI formatted for riced out terminals now with customizable ANSI colors, emoji's, ASCII art, Code detection and code syntax highlighting**
 
-**Perplexity.ai formatted in terminal with emoji and ANSI formatting**
+Welcome to **NerdPrompt**, a project that brings the power of AI into your elevated terminal. This tool allows you to query your AI and receive beautifully formatted responses with colorful ANSI colors, Emoji and/or ASCII art dividers and bullet points, Code detection and syntax highlighting with its own divider. Think markdown headers, bold, italics, dividers, and code blocks , but turned WAY up and customizable.
 
-Welcome to **Nerd Prompt**, a Python-based project that brings the power of Perplexity.ai into your terminal. This tool allows you to query Perplexity.ai and receive beautifully formatted responses with emojis, ANSI colors, and Markdown styling directly in your terminal.
 
+NerdPrompt: AI in terminal featuring:
+Rich Emoji, ANSI and ASCII Art color formatting replacement for Markdown formatting of headers, bold, italics, bullets,and dividers
+Code syntax highlighting with language detection. Custom dividers set in config for blocks of code.
 ---
 
 ## 🚀 Features
 
-- **Emoji-enhanced bullet points** for a fun and engaging experience.
-- **Multi-colored headers** using ANSI formatting:
-    - Green for `# Header`
-    - Blue for `## Subheader`
-    - Red for `### Sub-subheader`
+- **Custom Emoji or ASCII-enhanced bullet points** 
+- **Customer Multi-colored headers** using ANSI formatting you can match your VIM or terminal theme for headers 1, 2 and 3:
 - Supports **bold**, *italic*, and ***bold italic*** text rendered directly in the terminal.
-- Removes citation markers like `[^1]` for a cleaner output.
+- Removes citation markers like `[^1]` for a cleaner output in perplexity.ai (clickable links coming in future release)
 - Easy-to-use interface for querying Perplexity.ai.
 
 ---
