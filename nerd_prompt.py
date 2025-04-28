@@ -42,43 +42,33 @@ class PerplexityWrapper:
         )
         return response
     
-    def markdown_to_ansi(self, config, markdown_text):
+    def markdown_to_ansi(self, ansi_codes, config, markdown_text):
         # Define ANSI escape codes for colors and styles
-        ANSI_CODES = {
-            'bold': '\033[1m',
-            'italic': '\033[3m',
-            'bold_italic': '\033[1;3m',
-            'underline': '\033[4m',
-            'green': '\033[32m',
-            'blue': '\033[34m',
-            'red': '\033[31m',
-            'reset': '\033[0m'
-        }
-    
+
         # Convert headers to bold and colored
         markdown_text = re.sub(r'(?m)^# (.+)$', 
-                               f"{ANSI_CODES['bold']}{ANSI_CODES['green']}\\1{ANSI_CODES['reset']}", 
+                               f"{ansi_codes['bold']}{ansi_codes['green']}\\1{ansi_codes['reset']}", 
                                markdown_text)
         markdown_text = re.sub(r'(?m)^## (.+)$', 
-                               f"{ANSI_CODES['bold']}{ANSI_CODES['blue']}\\1{ANSI_CODES['reset']}", 
+                               f"{ansi_codes['bold']}{ansi_codes['blue']}\\1{ansi_codes['reset']}", 
                                markdown_text)
         markdown_text = re.sub(r'(?m)^### (.+)$', 
-                               f"{ANSI_CODES['bold']}{ANSI_CODES['red']}\\1{ANSI_CODES['reset']}", 
+                               f"{ansi_codes['bold']}{ansi_codes['red']}\\1{ansi_codes['reset']}", 
                                markdown_text)
     
         # Convert bold and italic text (***) first to avoid conflicts
         markdown_text = re.sub(r'\*\*\*(.+?)\*\*\*', 
-                               f"{ANSI_CODES['bold_italic']}\\1{ANSI_CODES['reset']}", 
+                               f"{ansi_codes['bold_italic']}\\1{ansi_codes['reset']}", 
                                markdown_text)
     
         # Convert bold text (**text**)
         markdown_text = re.sub(r'\*\*(.+?)\*\*', 
-                               f"{ANSI_CODES['bold']}\\1{ANSI_CODES['reset']}", 
+                               f"{ansi_codes['bold']}\\1{ansi_codes['reset']}", 
                                markdown_text)
     
         # Convert italic text (*text*)
         markdown_text = re.sub(r'\*(.+?)\*', 
-                               f"{ANSI_CODES['italic']}\\1{ANSI_CODES['reset']}", 
+                               f"{ansi_codes['italic']}\\1{ansi_codes['reset']}", 
                                markdown_text)
         
         # Divider choice 
@@ -151,7 +141,7 @@ class CodeProcesser:
     # We need to piece the highlighted markdown back together ```python\n<code></code>``` and put it 
     # back in doc converted to ANSI so  code displays highlighted
     # Added config.yaml code_dividers. This surrounds code blocks and doesn't replace --- markdown
-    def rebuild_code_type_and_syntax(self, config, extracted_code):
+    def rebuild_code_type_and_syntax(self, ansi_codes, config, extracted_code):
         code_type = extracted_code['code_type'].capitalize()
         code_syntax = extracted_code['highlighted_code']
         code_divider_choice = config["code_divider_choice"]
@@ -202,7 +192,34 @@ def main():
     config_eater = ConfigEater()
     config = config_eater.parse_config()
     config_eater.check_config(config)
-    
+   
+    ansi_codes = {
+    'bold': '\033[1m',
+    'italic': '\033[3m',
+    'bold_italic': '\033[1;3m',
+    'underline': '\033[4m',
+    'green': '\033[32m',
+    'blue': '\033[34m',
+    'red': '\033[31m',
+    'yellow': '\033[33m',
+    'magenta': '\033[35m',
+    'cyan': '\033[36m',
+    'white': '\033[37m',
+    'black': '\033[30m',
+    'bg_red': '\033[41m',
+    'bg_green': '\033[42m',
+    'bg_yellow': '\033[43m',
+    'bg_blue': '\033[44m',
+    'bg_magenta': '\033[45m',
+    'bg_cyan': '\033[46m',
+    'bg_white': '\033[47m',
+    'bg_black': '\033[40m',
+    'strikethrough': '\033[9m',
+    'reverse': '\033[7m',
+    'conceal': '\033[8m',
+    'reset': '\033[0m',
+    }
+ 
     try:
         # Load environment variables from .env file
         load_dotenv()
@@ -227,7 +244,7 @@ def main():
         doc_wo_code = perplexity_client.code_extractor(content)
         
         doc_no_code_str = doc_wo_code['text'] #doc without code
-        ansi_text = perplexity_client.markdown_to_ansi( config, doc_no_code_str) #doc with no code converted to ANSI
+        ansi_text = perplexity_client.markdown_to_ansi( ansi_codes, config, doc_no_code_str) #doc with no code converted to ANSI
         doc_wo_code['ansi_converted_text'] = ansi_text #adding dict key for ANSI converted text
        
         # todo: check code processing can happen when streaming since we cannot detect opening a closing markdown
@@ -237,7 +254,7 @@ def main():
         for code in doc_wo_code['code_blocks']: #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ANSI text
             code_type_and_syntax = code_processing.extract_code_type_and_syntax(code)
             highlighted_syntax = code_processing.syntax_highlighter(config, code_type_and_syntax)
-            rebuilt_code = code_processing.rebuild_code_type_and_syntax( config, highlighted_syntax)
+            rebuilt_code = code_processing.rebuild_code_type_and_syntax( ansi_codes, config, highlighted_syntax)
             rebuilt_code_blocks.append(rebuilt_code)
             # Replace the original code_blocks with the rebuilt ones
         doc_wo_code['code_blocks'] = rebuilt_code_blocks
