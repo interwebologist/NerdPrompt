@@ -2,3 +2,6 @@
 - Thinking Animation with msg- animated spinners or loaders with cycling characters
 - clickable links for citations 
 - Continue thread option to follow up with current context
+- add output in default markdown language
+- add config.yaml customization of headers
+- add True Color RGA colors for any item to be formatted
