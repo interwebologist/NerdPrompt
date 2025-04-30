@@ -1,3 +1,4 @@
+import logging
 import traceback
 from pygments import highlight
 from pygments.lexers import guess_lexer, get_lexer_by_name
@@ -47,13 +48,15 @@ class PerplexityWrapper:
 
         # Convert headers to bold and colored
         markdown_text = re.sub(r'(?m)^# (.+)$', 
-                               f"{ansi_codes['bold']}{ansi_codes['green']}\\1{ansi_codes['reset']}", 
+
+                               f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['magenta']}\\1{ansi_codes['reset']}", 
                                markdown_text)
         markdown_text = re.sub(r'(?m)^## (.+)$', 
-                               f"{ansi_codes['bold']}{ansi_codes['blue']}\\1{ansi_codes['reset']}", 
+                               f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['green']}\\1{ansi_codes['reset']}", 
                                markdown_text)
         markdown_text = re.sub(r'(?m)^### (.+)$', 
-                               f"{ansi_codes['bold']}{ansi_codes['red']}\\1{ansi_codes['reset']}", 
+                               f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['blue']}\\1{ansi_codes['reset']}", 
+
                                markdown_text)
     
         # Convert bold and italic text (***) first to avoid conflicts
@@ -132,7 +135,6 @@ class CodeProcesser:
         except:
             lexer = guess_lexer(code_type_and_syntax['code_syntax'])   
         finally:
-            #formatter = TerminalFormatter(style = f"{config['code_syntax_theme']}")
             formatter = Terminal256Formatter(style = f"{config['code_syntax_theme']}")
         highlighted_code = highlight(code_type_and_syntax['code_syntax'], lexer, formatter)
         code_type_and_syntax['highlighted_code'] = highlighted_code
@@ -146,7 +148,7 @@ class CodeProcesser:
         code_syntax = extracted_code['highlighted_code']
         code_divider_choice = config["code_divider_choice"]
         code_divider = config["code_dividers"][code_divider_choice]
-        rebuilt_code=f"""{code_divider}\n{code_type} Code:\n{code_syntax}\n{code_divider}\n"""
+        rebuilt_code=f"""\n{code_divider}\n\n{code_type} Code:\n{code_syntax}\n{code_divider}\n"""
         return rebuilt_code
 
 class ConfigEater:
@@ -188,6 +190,17 @@ class ConfigEater:
         if not is_valid:
             raise ValueError(f"Config validation error: {v.errors}") 
 
+def test_256_term_colors( ):
+    foreground_text = 38
+    background = 48
+    for i in range(256):
+        # Print color block with its code, 6 per line for readability
+        print(f"\033[48;5;{i}m {i:3d} \033[0m", end=' ')
+        if i % 16 == 0:
+            print()  # Newline after every 12 colors
+    print()  # Final newline
+
+
 def main():
     config_eater = ConfigEater()
     config = config_eater.parse_config()
@@ -225,17 +238,18 @@ def main():
         load_dotenv()
         YOUR_API_KEY = os.environ["API_KEY"]
     except KeyError:
-        print("Error: API_KEY is missing from the environment variables.")
+        logging.error("Error: API_KEY is missing from the environment variables.")
         sys.exit(1)
 
     if len(sys.argv) < 1:
-        print('Usage: python ask_perplexity.py "your question here"')
+        logging.error('Usage: python ask_perplexity.py "your question here"')
         sys.exit(1)
     try:
         your_question = sys.argv[1]
         #your_question = "show me denver weather using bullet points and dividers included" #sys.argv[1]
+
     except ValueError:
-        print('Use qoutes: python ask_perplexity.py "your question here"')
+        logging.error('Usage: python ask_perplexity.py "your question here"')
     try:
         perplexity_client = PerplexityWrapper(YOUR_API_KEY)
         
