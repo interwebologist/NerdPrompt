@@ -7,7 +7,16 @@ Welcome to **NerdPrompt**, a project that brings the power of AI into your eleva
 
 NerdPrompt: AI in terminal featuring:
 Rich Emoji, ANSI and ASCII Art color formatting replacement for Markdown formatting of headers, bold, italics, bullets,and dividers
-Code syntax highlighting with language detection. Custom dividers set in config for blocks of code.
+
+![Alt text](images/1.png "Optional title")
+![Alt text](images/2.png "Optional title")
+![Alt text](images/3.png "Optional title")
+![Alt text](images/4.png "Optional title")
+![Alt text](images/5.png "Optional title")
+![Alt text](images/6.png "Optional title")
+![Alt text](images/7.png "Optional title")
+![Alt text](images/8.png "Optional title")
+
 ---
 
 ## 🚀 Features
@@ -16,6 +25,7 @@ Code syntax highlighting with language detection. Custom dividers set in config 
 - **Customer Multi-colored headers** using ANSI formatting you can match your VIM or terminal theme for headers 1, 2 and 3:
 - Supports **bold**, *italic*, and ***bold italic*** text rendered directly in the terminal.
 - Removes citation markers like `[^1]` for a cleaner output in perplexity.ai (clickable links coming in future release)
+- Code syntax highlighting with language detection. Custom dividers set in config for blocks of code.
 - Easy-to-use interface for querying Perplexity.ai.
 
 ---
