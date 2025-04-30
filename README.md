@@ -8,18 +8,18 @@ Welcome to **NerdPrompt**, a project that brings the power of AI into your eleva
 NerdPrompt: AI in terminal featuring:
 Rich Emoji, ANSI and ASCII Art color formatting replacement for Markdown formatting of headers, bold, italics, bullets,and dividers
 
-![Alt text](images/6.png "Optional title")
 ![Alt text](images/7.png "Optional title")
 ![Alt text](images/5.png "Optional title")
 ![Alt text](images/4.png "Optional title")
 ![Alt text](images/1.png "Optional title")
 ![Alt text](images/2.png "Optional title")
+![Alt text](images/6.png "Optional title")
 
 ---
 
 ## 🚀 Features
 
-- **Custom Emoji or ASCII-enhanced bullet points** 
+- **Custom Emoji,ANSI (Colors), or ASCII-enhanced bullet points** 
 - **Customer Multi-colored headers** using ANSI formatting you can match your VIM or terminal theme for headers 1, 2 and 3:
 - Supports **bold**, *italic*, and ***bold italic*** text rendered directly in the terminal.
 - Removes citation markers like `[^1]` for a cleaner output in perplexity.ai (clickable links coming in future release)
@@ -30,22 +30,37 @@ Rich Emoji, ANSI and ASCII Art color formatting replacement for Markdown formatt
 
 ## 🔧 Installation
 
-Follow these steps to install **Nerd Prompt**:
+Follow these steps to install Nerd Prompt:
 
-1. Clone the repository:
+1. **Clone the repository:**
 
-```bash
-git clone https://github.com/your-repo/perplexed-terminal.git
-cd perplexed-terminal
-```
+    ```
+    git clone https://github.com/your-repo/perplexed-terminal.git
+    cd perplexed-terminal
+    ```
 
-2. Install dependencies:
+2. **Create and activate a virtual environment (recommended):**
 
-```bash
-pip install -r requirements.txt
-```
+    ```
+    python3 -m venv venv
+    # On Linux or macOS:
+    source venv/bin/activate
+    # On Windows:
+    venv\Scripts\activate
+    ```
 
-3. Set up your API key (see below).
+3. **Install dependencies:**
+
+    ```
+    pip install -r requirements.txt
+    ```
+
+4. **Set up your API key (see below).**
+
+---
+
+**Note:**  
+Using a virtual environment (`venv`) keeps dependencies isolated from your system Python and is best practice for Python projects.
 
 ---
 
@@ -84,30 +99,15 @@ API_KEY=your_api_key_here
 Run the script with your query as an argument:
 
 ```bash
-python perplexed_terminal.py "What is the capital of France?"
+python nerd_prompt.py "What is the capital of France?"
 ```
-
-
-### Example Output:
-
-```plaintext
-# 🌟 Paris
-Paris is the capital city of France.
-
-## 🗺️ Geography
-Located along the Seine River, Paris is known for its iconic landmarks like the Eiffel Tower.
-
-### 🎨 Culture
-Paris is also a global center for art, fashion, and gastronomy.
-```
-
 ---
 
 ## ✨ Markdown Formatting in Terminal
 
-The tool supports rich Markdown formatting with ANSI colors:
+The tool supports formatting for the Terminal:
 
-- **Headers** are styled with different colors:
+- **Headers** are styled with different colors. Example:
     - Green for `# Header`
     - Blue for `## Subheader`
     - Red for `### Sub-subheader`
@@ -116,6 +116,7 @@ The tool supports rich Markdown formatting with ANSI colors:
     - *Italic*
     - ***Bold Italic***
 - Emoji-enhanced bullet points like 🚀, 🔥, and ✨ add personality to your terminal output.
+- Add your own ASCII art dividers or dividers with emoji's
 
 ---
 
@@ -139,62 +140,67 @@ For further assistance, consult [Perplexity's Help Center](https://www.perplexit
 
 ---
 
-Enjoy using **Nerd Prompt**! 🚀
+## 🎨 Code Syntax Highlighting Themes
 
-<div>⁂</div>
-# Pygment Python Library syntax styles setting. Mark code block will be colored with this theme
-# Check what these would look like by using the Pygment style checker. Check which syntax type
-# "Python" , etc and use the dropdown to check themes. https://pygments.org/demo/. If extra styles
-# are added just add them below in a new numbered line and set code_syntax_choice to style number.
-Code Syntax Highlighting Themes
-```
-  1: "abap"
-  2: "algol"
-  3: "algol_nu"
-  4: "arduino"
-  5: "autumn"
-  6: "bw"
-  7: "borland"
-  8: "coffee"
-  9: "colorful"
-  10: "default"
-  11: "dracula"
-  12: "emacs"
-  13: "friendly_grayscale"
-  14: "friendly"
-  15: "fruity"
-  16: "github-dark"
-  17: "gruvbox-dark"
-  18: "gruvbox-light"
-  19: "igor"
-  20: "inkpot"
-  21: "lightbulb"
-  22: "lilypond"
-  23: "lovelace"
-  24: "manni"
-  25: "material"
-  26: "monokai"
-  27: "murphy"
-  28: "native"
-  29: "nord-darker"
-  30: "nord"
-  31: "one-dark"
-  32: "paraiso-dark"
-  33: "paraiso-light"
-  34: "pastie"
-  35: "perldoc"
-  36: "rainbow_dash"
-  37: "rrt"
-  38: "sas"
-  39: "solarized-dark"
-  40: "solarized-light"
-  41: "staroffice"
-  42: "stata-dark"
-  43: "stata-light"
-  44: "tango"
-  45: "trac"
-  46: "vim"
-  47: "vs"
-  48: "xcode"
-  49: "zenburn"
-```
+This project uses [Pygments](https://pygments.org/) for code syntax highlighting. You can customize the appearance of code blocks by selecting one of the many available Pygments styles. For a live preview of each theme, visit the [Pygments demo page](https://pygments.org/demo/)[4][15].
+
+**To set a style, configure your formatter in the config.yaml with the desired style name.**  
+For example, in Python:
+
+[9][5]
+
+### Available Code Styles
+
+Below is a list of supported syntax highlighting themes:
+
+- abap
+- algol
+- algol_nu
+- arduino
+- autumn
+- bw
+- borland
+- coffee
+- colorful
+- default
+- dracula
+- emacs
+- friendly_grayscale
+- friendly
+- fruity
+- github-dark
+- gruvbox-dark
+- gruvbox-light
+- igor
+- inkpot
+- lightbulb
+- lilypond
+- lovelace
+- manni
+- material
+- monokai
+- murphy
+- native
+- nord-darker
+- nord
+- one-dark
+- paraiso-dark
+- paraiso-light
+- pastie
+- perldoc
+- rainbow_dash
+- rrt
+- sas
+- solarized-dark
+- solarized-light
+- staroffice
+- stata-dark
+- stata-light
+- tango
+- trac
+- vim
+- vs
+- xcode
+- zenburn
+
+Enjoy using **Nerd Prompt**! 🚀
