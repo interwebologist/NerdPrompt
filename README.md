@@ -13,10 +13,6 @@
 
 ---
 
-Welcome to **NerdPrompt**, a project that brings the power of AI into your elevated terminal. This tool allows you to query your AI and receive beautifully formatted responses with colorful ANSI colors, Emoji and/or ASCII art dividers and bullet points, Code detection and syntax highlighting with its own divider. Think markdown headers, bold, italics, dividers, and code blocks , but turned WAY up and customizable.
-
----
-
 ## 🚀 Features
 
 - **Custom Emoji,ANSI (Colors), or ASCII-enhanced bullet points** 
