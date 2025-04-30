@@ -31,8 +31,8 @@ Follow these steps to install Nerd Prompt:
 1. **Clone the repository:**
 
     ```
-    git clone https://github.com/your-repo/perplexed-terminal.git
-    cd perplexed-terminal
+    git clone https://github.com/interwebologist/NerdPrompt.git
+    cd NerdPrompt
     ```
 
 2. **Create and activate a virtual environment (recommended):**
