@@ -48,13 +48,13 @@ class PerplexityWrapper:
 
         # Convert headers to bold and colored
         markdown_text = re.sub(r'(?m)^# (.+)$', 
-                               f"{ansi_codes['bold']}{ansi_codes['green']}\\1{ansi_codes['reset']}", 
+                               f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['magenta']}\\1{ansi_codes['reset']}", 
                                markdown_text)
         markdown_text = re.sub(r'(?m)^## (.+)$', 
-                               f"{ansi_codes['bold']}{ansi_codes['blue']}\\1{ansi_codes['reset']}", 
+                               f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['green']}\\1{ansi_codes['reset']}", 
                                markdown_text)
         markdown_text = re.sub(r'(?m)^### (.+)$', 
-                               f"{ansi_codes['bold']}{ansi_codes['red']}\\1{ansi_codes['reset']}", 
+                               f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['blue']}\\1{ansi_codes['reset']}", 
                                markdown_text)
     
         # Convert bold and italic text (***) first to avoid conflicts
@@ -146,7 +146,7 @@ class CodeProcesser:
         code_syntax = extracted_code['highlighted_code']
         code_divider_choice = config["code_divider_choice"]
         code_divider = config["code_dividers"][code_divider_choice]
-        rebuilt_code=f"""{code_divider}\n{code_type} Code:\n{code_syntax}\n{code_divider}\n"""
+        rebuilt_code=f"""\n{code_divider}\n\n{code_type} Code:\n{code_syntax}\n{code_divider}\n"""
         return rebuilt_code
 
 class ConfigEater:
@@ -245,8 +245,9 @@ def main():
     try:
         your_question = sys.argv[1]
         #your_question = "show me denver weather using bullet points and dividers included" #sys.argv[1]
+
     except ValueError:
-        logging.error('Use qoutes: python ask_perplexity.py "your question here"')
+        logging.error('Usage: python ask_perplexity.py "your question here"')
     try:
         perplexity_client = PerplexityWrapper(YOUR_API_KEY)
         
