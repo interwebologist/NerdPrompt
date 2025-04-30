@@ -8,14 +8,12 @@ Welcome to **NerdPrompt**, a project that brings the power of AI into your eleva
 NerdPrompt: AI in terminal featuring:
 Rich Emoji, ANSI and ASCII Art color formatting replacement for Markdown formatting of headers, bold, italics, bullets,and dividers
 
-![Alt text](images/1.png "Optional title")
-![Alt text](images/2.png "Optional title")
-![Alt text](images/3.png "Optional title")
-![Alt text](images/4.png "Optional title")
-![Alt text](images/5.png "Optional title")
 ![Alt text](images/6.png "Optional title")
 ![Alt text](images/7.png "Optional title")
-![Alt text](images/8.png "Optional title")
+![Alt text](images/5.png "Optional title")
+![Alt text](images/4.png "Optional title")
+![Alt text](images/1.png "Optional title")
+![Alt text](images/2.png "Optional title")
 
 ---
 
