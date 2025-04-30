@@ -2,11 +2,13 @@
 
 **AI formatted for tricked out terminals now with customizable ANSI colors, emoji's, ASCII art dividers, Code detection and code syntax highlighting** (Currently tested with Perplexity.AI)
 
+![Alt text](images/8.png "Optional title")
 ![Alt text](images/7.png "Optional title")
 ![Alt text](images/5.png "Optional title")
 ![Alt text](images/4.png "Optional title")
 ![Alt text](images/1.png "Optional title")
 ![Alt text](images/2.png "Optional title")
+![Alt text](images/6.png "Optional title")
 ![Alt text](images/6.png "Optional title")
 
 ---
