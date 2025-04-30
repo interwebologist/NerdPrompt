@@ -142,12 +142,10 @@ For further assistance, consult [Perplexity's Help Center](https://www.perplexit
 
 ## 🎨 Code Syntax Highlighting Themes
 
-This project uses [Pygments](https://pygments.org/) for code syntax highlighting. You can customize the appearance of code blocks by selecting one of the many available Pygments styles. For a live preview of each theme, visit the [Pygments demo page](https://pygments.org/demo/)[4][15].
+This project uses [Pygments](https://pygments.org/) for code syntax highlighting. You can customize the appearance of code blocks by selecting one of the many available Pygments styles. For a live preview of each theme, visit the [Pygments demo page](https://pygments.org/demo/).
 
 **To set a style, configure your formatter in the config.yaml with the desired style name.**  
 For example, in Python:
-
-[9][5]
 
 ### Available Code Styles
 
