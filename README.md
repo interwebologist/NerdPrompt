@@ -1,12 +1,6 @@
 # NerdPrompt
 
-**AI formatted for riced out terminals now with customizable ANSI colors, emoji's, ASCII art, Code detection and code syntax highlighting**
-
-Welcome to **NerdPrompt**, a project that brings the power of AI into your elevated terminal. This tool allows you to query your AI and receive beautifully formatted responses with colorful ANSI colors, Emoji and/or ASCII art dividers and bullet points, Code detection and syntax highlighting with its own divider. Think markdown headers, bold, italics, dividers, and code blocks , but turned WAY up and customizable.
-
-
-NerdPrompt: AI in terminal featuring:
-Rich Emoji, ANSI and ASCII Art color formatting replacement for Markdown formatting of headers, bold, italics, bullets,and dividers
+**AI formatted for tricked out terminals now with customizable ANSI colors, emoji's, ASCII art dividers, Code detection and code syntax highlighting** (Currently tested with Perplexity.AI)
 
 ![Alt text](images/7.png "Optional title")
 ![Alt text](images/5.png "Optional title")
@@ -14,6 +8,10 @@ Rich Emoji, ANSI and ASCII Art color formatting replacement for Markdown formatt
 ![Alt text](images/1.png "Optional title")
 ![Alt text](images/2.png "Optional title")
 ![Alt text](images/6.png "Optional title")
+
+---
+
+Welcome to **NerdPrompt**, a project that brings the power of AI into your elevated terminal. This tool allows you to query your AI and receive beautifully formatted responses with colorful ANSI colors, Emoji and/or ASCII art dividers and bullet points, Code detection and syntax highlighting with its own divider. Think markdown headers, bold, italics, dividers, and code blocks , but turned WAY up and customizable.
 
 ---
 
