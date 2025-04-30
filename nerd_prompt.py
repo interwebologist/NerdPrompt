@@ -48,6 +48,7 @@ class PerplexityWrapper:
 
         # Convert headers to bold and colored
         markdown_text = re.sub(r'(?m)^# (.+)$', 
+
                                f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['magenta']}\\1{ansi_codes['reset']}", 
                                markdown_text)
         markdown_text = re.sub(r'(?m)^## (.+)$', 
@@ -55,6 +56,7 @@ class PerplexityWrapper:
                                markdown_text)
         markdown_text = re.sub(r'(?m)^### (.+)$', 
                                f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['blue']}\\1{ansi_codes['reset']}", 
+
                                markdown_text)
     
         # Convert bold and italic text (***) first to avoid conflicts
