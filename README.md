@@ -1,4 +1,4 @@
-# NerdPrompt
+# 🧠 NerdPrompt
 
 **AI formatted for tricked out terminals now with customizable ANSI colors, emoji's, ASCII art dividers, Code detection and code syntax highlighting with alot more on the way** (Currently tested with Perplexity.AI)
 
