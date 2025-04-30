@@ -1,7 +1,4 @@
-- Better headers? gradients,boxes around them, or embedded in ANSI divider. Bold + underline + color 
-- code output is broken fix using header ideas above
+
 - Thinking Animation with msg- animated spinners or loaders with cycling characters
-- images in terminal?
-- clickable links for citations? 
-- what about tables? 
-- syntax highlighting since python code is "```python<code>```? 
+- clickable links for citations 
+- Continue thread option to follow up with current context
