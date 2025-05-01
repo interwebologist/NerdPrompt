@@ -15,12 +15,13 @@
 
 ## 🚀 Features
 
-- **Custom Emoji,ANSI (Colors), or ASCII-enhanced bullet points** 
-- **Customer Multi-colored headers** using ANSI formatting you can match your VIM or terminal theme for headers 1, 2 and 3:
-- Supports **bold**, *italic*, and ***bold italic*** text rendered directly in the terminal.
-- Removes citation markers like `[^1]` for a cleaner output in perplexity.ai (clickable links coming in future release)
-- Code syntax highlighting with language detection. Custom dividers set in config for blocks of code.
-- Easy-to-use interface for querying Perplexity.ai.
+- Custom Emoji, ANSI (Colors), or ASCII-enhanced bullet points
+- Custom Horizontal Dividers 
+- Custom colored, headers. Match your VIM theme for headers colors
+- Supports bold, italic, and bold italic text rendered directly in the terminal.
+- Removes citation markers like "[1]" for a cleaner output from perplexity.ai (clickable citations coming)
+- Code syntax highlighting /  language detection. 
+- Custom horizontal dividers for code blocks.
 
 ---
 
