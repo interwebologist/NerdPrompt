@@ -45,19 +45,45 @@ class PerplexityWrapper:
     
     def markdown_to_ansi(self, ansi_codes, config, markdown_text):
         # Define ANSI escape codes for colors and styles
+        hash_marks = "#"
+        for header in range(6):
+            header = header + 1 
+            header_name = f"header_{header}"
+            if config[header_name]:
+                ansi_count = 0
+                ansi_string = f"\\1{ansi_codes['reset']}"
+                for ansi in config[header_name]:
+                    ansi_string = f"{ansi_codes[str(config[header_name][ansi_count])]}" + ansi_string
+                    ansi_count = ansi_count+1
+                          #print(ansi_string)
+        
+            else:
+                ansi_string = f"\\1"
+    
+            markdown_text = re.sub(rf'(?m)^{hash_marks} (.+)$', 
+                                   ansi_string, 
+                                   markdown_text)
+            hash_marks = "#" + hash_marks
+        
+                # Convert headers to bold and colored
+    
+            # Convert headers to bold and colored
+#       markdown_text = re.sub(r'(?m)^# (.+)$', 
+#                                   f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['magenta']}\\1{ansi_codes['reset']}", 
+#                                   markdown_text)
 
-        # Convert headers to bold and colored
-        markdown_text = re.sub(r'(?m)^# (.+)$', 
+            
 
-                               f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['magenta']}\\1{ansi_codes['reset']}", 
-                               markdown_text)
-        markdown_text = re.sub(r'(?m)^## (.+)$', 
-                               f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['green']}\\1{ansi_codes['reset']}", 
-                               markdown_text)
-        markdown_text = re.sub(r'(?m)^### (.+)$', 
-                               f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['blue']}\\1{ansi_codes['reset']}", 
-
-                               markdown_text)
+#        markdown_text = re.sub(r'(?m)^# (.+)$', 
+#                                   f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['magenta']}\\1{ansi_codes['reset']}", 
+#                                   markdown_text)
+#
+#        markdown_text = re.sub(r'(?m)^## (.+)$', 
+#                               f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['green']}\\1{ansi_codes['reset']}", 
+#                               markdown_text)
+#        markdown_text = re.sub(r'(?m)^### (.+)$', 
+#                               f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['blue']}\\1{ansi_codes['reset']}", 
+#                               markdown_text)
     
         # Convert bold and italic text (***) first to avoid conflicts
         markdown_text = re.sub(r'\*\*\*(.+?)\*\*\*', 
@@ -156,7 +182,10 @@ class ConfigEater:
           with open('config.yaml', 'r') as f:
               config = yaml.safe_load(f)
               return config
-    def check_config(self, config_dict):
+    def check_config(self, ansi_codes, config_dict):
+        ansi_list = list(ansi_codes.keys())
+        print("ansi_list: ", ansi_list)
+
         schema = {
         'llm_url': {'type': 'string', 'required': True},
         'llm_model': {'type': 'string', 'required': True},
@@ -164,9 +193,12 @@ class ConfigEater:
         'code_syntax_theme': {'type': 'string', 'required': True},
         'system_content': {'type': 'string', 'required': True},
         'bullet_point_unicode': {'type': 'string', 'required': True},
-        'header_1': {'type': 'list', 'schema': {'type': 'string'}, 'required': True},
-        'header_2': {'type': 'list', 'schema': {'type': 'string'}, 'required': True},
-        'header_3': {'type': 'list', 'schema': {'type': 'string'}, 'required': True},
+        'header_1': {'type': 'list', 'schema': {'type': 'string'}, 'required': True, 'allowed' : ansi_list},
+        'header_2': {'type': 'list', 'schema': {'type': 'string'}, 'required': True, 'allowed' : ansi_list},
+        'header_3': {'type': 'list', 'schema': {'type': 'string'}, 'required': True, 'allowed' : ansi_list},
+        'header_4': {'type': 'list', 'schema': {'type': 'string'}, 'required': True, 'allowed' : ansi_list},
+        'header_5': {'type': 'list', 'schema': {'type': 'string'}, 'required': True, 'allowed' : ansi_list},
+        'header_6': {'type': 'list', 'schema': {'type': 'string'}, 'required': True, 'allowed' : ansi_list},
         'ascii_divider_position': {'type': 'string', 'allowed': ['left', 'center', 'right'], 'required': True},
         'ascii_divider_choice': {'type': 'integer', 'required': True},
         'ascii_dividers': {
@@ -202,10 +234,7 @@ def test_256_term_colors( ):
 
 
 def main():
-    config_eater = ConfigEater()
-    config = config_eater.parse_config()
-    config_eater.check_config(config)
-   
+    
     ansi_codes = {
     'bold': '\033[1m',
     'italic': '\033[3m',
@@ -232,7 +261,11 @@ def main():
     'conceal': '\033[8m',
     'reset': '\033[0m',
     }
- 
+    
+    config_eater = ConfigEater()
+    config = config_eater.parse_config()
+    config_eater.check_config( ansi_codes, config)
+   
     try:
         # Load environment variables from .env file
         load_dotenv()
