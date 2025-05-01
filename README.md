@@ -1,6 +1,6 @@
 # 🧠 NerdPrompt
 
-**AI formatted for tricked out terminals now with customizable ANSI colors, emoji's, ASCII art dividers, Code detection and code syntax highlighting with alot more on the way** (Currently tested with Perplexity.AI, should work with ChatGPT, Claude, Cohere , but untested)
+**AI formatted for tricked out terminals now with customizable ANSI colors, emoji's, ASCII art dividers, Code detection and code syntax highlighting with alot more on the way** (Currently tested with Perplexity.AI, should work with ChatGPT, Claude, Cohere)
 
 ![Alt text](images/9.png "Optional title")
 ![Alt text](images/7.png "Optional title")
