@@ -55,7 +55,6 @@ class PerplexityWrapper:
                 for ansi in config[header_name]:
                     ansi_string = f"{ansi_codes[str(config[header_name][ansi_count])]}" + ansi_string
                     ansi_count = ansi_count+1
-                          #print(ansi_string)
         
             else:
                 ansi_string = f"\\1"
@@ -164,8 +163,8 @@ class ConfigEater:
               config = yaml.safe_load(f)
               return config
     def check_config(self, ansi_codes, config_dict):
+
         ansi_list = list(ansi_codes.keys())
-        print("ansi_list: ", ansi_list)
 
         schema = {
         'llm_url': {'type': 'string', 'required': True},
