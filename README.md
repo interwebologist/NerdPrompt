@@ -17,10 +17,10 @@
 
 - Custom Emoji, ANSI (Colors), or ASCII-enhanced bullet points
 - Custom Horizontal Dividers 
-- Custom colored, headers. Match your VIM theme for headers colors
+- Custom headers. Match your VIM theme colors, underline, etc
 - Supports bold, italic, and bold italic text rendered directly in the terminal.
-- Removes citation markers like "[1]" for a cleaner output from perplexity.ai (clickable citations coming)
-- Code syntax highlighting /  language detection. 
+- Removes citation markers like "[1]" for a cleaner output in perplexity.ai (clickable citations coming)
+- Code syntax highlighting. Choose from common themes. Create your own.
 - Custom horizontal dividers for code blocks.
 
 ---
