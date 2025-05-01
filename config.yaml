@@ -7,7 +7,7 @@ system_content: |  #Markdown respnses are important as this gots converted in AN
   FORMAT: Use standard markdown (##, -, *, ```). Do not use horizontal dividers to separate code and text. 
   STYLE: Be concise, accurate, and direct. Assume technical competence. Provide actionable solutions with examples. 
   Use appropriate technical terminology and highlight best practices.Start and end each request with a markdown '---' divider. 
-  add '---' dividers organize sections of your response for better reading
+  add '---' dividers to organize sections of your response if needed for readablility
 bullet_point_unicode: "\U0001F680" #Rocket Emoji 🚀. Use format \U0001F680 required for Python.use " in yaml for unicode.
 header_1: [bold, magenta, underline ]
 header_2: [bold, green, underline ]
