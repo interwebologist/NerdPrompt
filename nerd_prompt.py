@@ -65,25 +65,6 @@ class PerplexityWrapper:
                                    markdown_text)
             hash_marks = "#" + hash_marks
         
-                # Convert headers to bold and colored
-    
-            # Convert headers to bold and colored
-#       markdown_text = re.sub(r'(?m)^# (.+)$', 
-#                                   f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['magenta']}\\1{ansi_codes['reset']}", 
-#                                   markdown_text)
-
-            
-
-#        markdown_text = re.sub(r'(?m)^# (.+)$', 
-#                                   f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['magenta']}\\1{ansi_codes['reset']}", 
-#                                   markdown_text)
-#
-#        markdown_text = re.sub(r'(?m)^## (.+)$', 
-#                               f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['green']}\\1{ansi_codes['reset']}", 
-#                               markdown_text)
-#        markdown_text = re.sub(r'(?m)^### (.+)$', 
-#                               f"{ansi_codes['underline']}{ansi_codes['bold']}{ansi_codes['blue']}\\1{ansi_codes['reset']}", 
-#                               markdown_text)
     
         # Convert bold and italic text (***) first to avoid conflicts
         markdown_text = re.sub(r'\*\*\*(.+?)\*\*\*', 
