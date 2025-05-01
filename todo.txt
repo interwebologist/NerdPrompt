@@ -4,4 +4,5 @@
 - Continue thread option to follow up with current context
 - add output in default markdown language
 - add config.yaml customization of headers
-- add True Color RGA colors for any item to be formatted
+- add True Color RGA colors for any item to be formatted ANSI
+- Streaming? responses are ok now without continued context. Lets see where we end up after allowing threads
