@@ -98,6 +98,12 @@ Run the script with your query as an argument:
 ```bash
 python nerd_prompt.py "What is the capital of France?"
 ```
+I suggest setting up an alias you can fire of python commands with out activiating the python enviroment like this: 
+
+```bash
+/path/to/your/venv/bin/python script.py
+```
+
 ---
 
 ## ✨ Markdown Formatting in Terminal
