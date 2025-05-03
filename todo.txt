@@ -6,3 +6,4 @@
 - add config.yaml customization of headers
 - add True Color RGA colors for any item to be formatted ANSI
 - Streaming? responses are ok now without continued context. Lets see where we end up after allowing threads
+- Cleaner look by wrapping a 80 cols. Best way to do this is by using textwrap python package.
