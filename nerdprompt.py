@@ -1,3 +1,4 @@
+from pathlib import Path
 import logging
 import traceback
 from pygments import highlight
@@ -159,11 +160,12 @@ class CodeProcesser:
 
 class ConfigEater:
     def parse_config(self):
-          with open('config.yaml', 'r') as f:
-              config = yaml.safe_load(f)
-              return config
+        script_location = Path(__file__).absolute().parent    
+        with open(f'{script_location}/config.yaml', 'r') as f:
+            config = yaml.safe_load(f)
+            return config
     def check_config(self, ansi_codes, config_dict):
-
+        
         ansi_list = list(ansi_codes.keys())
 
         schema = {
