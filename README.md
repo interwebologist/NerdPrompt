@@ -8,7 +8,7 @@
 ![Alt text](images/5.png "Optional title")
 ![Alt text](images/2.png "Optional title")
 
-**In NeoVIM w/ "<leader>np" !HERE(https://github.com/interwebologist/neovim_config/blob/fd8320c6e7d1a5ed117c335bf4a620bad66f6995/init.lua#L32-L50)**
+**In NeoVIM w/ "<leader>np" ![HERE](https://github.com/interwebologist/neovim_config/blob/fd8320c6e7d1a5ed117c335bf4a620bad66f6995/init.lua#L32-L50)**
 ![Alt text](images/Neovim1.png "Optional title")
 
 ---
