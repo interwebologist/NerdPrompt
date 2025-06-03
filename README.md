@@ -8,7 +8,7 @@
 ![Alt text](images/2.png "Optional title")
 
 **In NeoVIM w/ "leader key + np hotkey" [HERE](https://github.com/interwebologist/neovim_config/blob/fd8320c6e7d1a5ed117c335bf4a620bad66f6995/init.lua#L32-L50)**
-With Noice installed this will give a popup floating middle of screen beforing spliting the screen to run NerdPrompt.
+With Noice installed this will give a popup floating middle of screen before spliting the screen to run NerdPrompt.
 ![Alt text](images/Neovim1.png "Optional title")
 
 ---
