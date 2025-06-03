@@ -8,6 +8,8 @@
 ![Alt text](images/5.png "Optional title")
 ![Alt text](images/2.png "Optional title")
 
+**In NeoVIM w/ leader key init.lua snippet below**
+![Alt text](images/Neovim1.png "Optional title")
 
 ---
 
