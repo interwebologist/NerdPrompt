@@ -240,6 +240,7 @@ def test_256_term_colors( ):
         if i % 16 == 0:
             print()  # Newline after every 12 colors
     print()  # Final newline
+
 def load_api_key():
     """Load API key from environment variables."""
     load_dotenv()
@@ -249,34 +250,28 @@ def load_api_key():
         sys.exit(1)
     return api_key
 
-#    try:
-#        # Load environment variables from .env file
-#        load_dotenv()
-#        YOUR_API_KEY = os.environ["API_KEY"]
-#    except KeyError:
-#        logging.error("Error: API_KEY is missing from the environment variables.")
-#        sys.exit(1)
+def parse_arguments():
+    if len(sys.argv) < 1:
+        logging.error('Usage: python ask_perplexity.py "your question here"')
+        sys.exit(1)
+    try:
+        your_question = sys.argv[1]
+        #your_question = "show me denver weather using bullet points and dividers" #sys.argv[1]
+
+    except ValueError:
+        logging.error('Usage: python ask_perplexity.py "your question here"')
+    return your_question
 
 def main():
     
     config_eater = ConfigEater()
     config = config_eater.parse_config()
     config_eater.check_config( ANSI_CODES, config)
-   
 
-    if len(sys.argv) < 1:
-        logging.error('Usage: python ask_perplexity.py "your question here"')
-        sys.exit(1)
-    try:
-        your_question = sys.argv[1]
-        #your_question = "show me denver weather using bullet points and dividers included" #sys.argv[1]
-
-    except ValueError:
-        logging.error('Usage: python ask_perplexity.py "your question here"')
     try:
         perplexity_client = PerplexityWrapper(load_api_key())
         
-        response = perplexity_client.client(config, your_question)
+        response = perplexity_client.client(config, parse_arguments())
         content = response.choices[0].message.content
         doc_wo_code = perplexity_client.code_extractor(content)
         
@@ -284,11 +279,10 @@ def main():
         ansi_text = perplexity_client.markdown_to_ansi( ANSI_CODES, config, doc_no_code_str) #doc with no code converted to ANSI
         doc_wo_code['ansi_converted_text'] = ansi_text #adding dict key for ANSI converted text
        
-        # todo: check code processing can happen when streaming since we cannot detect opening a closing markdown
-        # in events
         code_processing = CodeProcesser()
         rebuilt_code_blocks = []
-        for code in doc_wo_code['code_blocks']: #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ANSI text
+         #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ANSI text
+        for code in doc_wo_code['code_blocks']:
             code_type_and_syntax = code_processing.extract_code_type_and_syntax(code)
             highlighted_syntax = code_processing.syntax_highlighter(config, code_type_and_syntax)
             rebuilt_code = code_processing.rebuild_code_type_and_syntax( ANSI_CODES, config, highlighted_syntax)
@@ -305,4 +299,4 @@ def main():
     
 if __name__ == "__main__":
     main()
-
+ #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ANSI text
