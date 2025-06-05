@@ -240,7 +240,22 @@ def test_256_term_colors( ):
         if i % 16 == 0:
             print()  # Newline after every 12 colors
     print()  # Final newline
+def load_api_key():
+    """Load API key from environment variables."""
+    load_dotenv()
+    api_key = os.getenv("API_KEY")
+    if not api_key:
+        logging.error("Error: API_KEY is missing from environment variables. Ensure `.env` is configured.")
+        sys.exit(1)
+    return api_key
 
+#    try:
+#        # Load environment variables from .env file
+#        load_dotenv()
+#        YOUR_API_KEY = os.environ["API_KEY"]
+#    except KeyError:
+#        logging.error("Error: API_KEY is missing from the environment variables.")
+#        sys.exit(1)
 
 def main():
     
@@ -248,13 +263,6 @@ def main():
     config = config_eater.parse_config()
     config_eater.check_config( ANSI_CODES, config)
    
-    try:
-        # Load environment variables from .env file
-        load_dotenv()
-        YOUR_API_KEY = os.environ["API_KEY"]
-    except KeyError:
-        logging.error("Error: API_KEY is missing from the environment variables.")
-        sys.exit(1)
 
     if len(sys.argv) < 1:
         logging.error('Usage: python ask_perplexity.py "your question here"')
@@ -266,7 +274,7 @@ def main():
     except ValueError:
         logging.error('Usage: python ask_perplexity.py "your question here"')
     try:
-        perplexity_client = PerplexityWrapper(YOUR_API_KEY)
+        perplexity_client = PerplexityWrapper(load_api_key())
         
         response = perplexity_client.client(config, your_question)
         content = response.choices[0].message.content
@@ -296,6 +304,5 @@ def main():
         traceback.print_exc() 
     
 if __name__ == "__main__":
-    
     main()
 
