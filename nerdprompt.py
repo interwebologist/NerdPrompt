@@ -255,17 +255,17 @@ def load_api_key():
         sys.exit(1)
     return api_key
 
-def parse_arguments():
-    if len(sys.argv) < 1:
-        logging.error('Usage: python ask_perplexity.py "your question here"')
-        sys.exit(1)
-    try:
-        your_question = sys.argv[1]
-        #your_question = "show me denver weather using bullet points and dividers" #sys.argv[1]
-
-    except ValueError:
-        logging.error('Usage: python ask_perplexity.py "your question here"')
-    return your_question
+def get_question():
+    # Check if a question was provided as a command-line argument
+    if len(sys.argv) > 1:
+        return sys.argv[1]
+    else:
+        # Prompt the user for a question interactively
+        question = input("Please enter your follow up question: ").strip()
+        while not question:
+            print("You must enter a question.")
+            question = input("Please enter your follow up question: ").strip()
+        return question
 
 def main():
     
@@ -275,36 +275,57 @@ def main():
 
     try:
         perplexity_client = PerplexityWrapper(config, load_api_key())
-
-        content = parse_arguments()
-        perplexity_client.message_appender("user", content)
-        response = perplexity_client.ask(config)
-        content = response.choices[0].message.content
-        perplexity_client.message_appender("assistant", content)
-        doc_wo_code = perplexity_client.code_extractor(content)
-        
-        doc_no_code_str = doc_wo_code['text'] #doc without code
-        ansi_text = perplexity_client.markdown_to_ansi( ANSI_CODES, config, doc_no_code_str) #doc with no code converted to ANSI
-        doc_wo_code['ansi_converted_text'] = ansi_text #adding dict key for ANSI converted text
-       
-        code_processing = CodeProcesser()
-        rebuilt_code_blocks = []
-         #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ANSI text
-        for code in doc_wo_code['code_blocks']:
-            code_type_and_syntax = code_processing.extract_code_type_and_syntax(code)
-            highlighted_syntax = code_processing.syntax_highlighter(config, code_type_and_syntax)
-            rebuilt_code = code_processing.rebuild_code_type_and_syntax( ANSI_CODES, config, highlighted_syntax)
-            rebuilt_code_blocks.append(rebuilt_code)
-            # Replace the original code_blocks with the rebuilt ones
-        doc_wo_code['code_blocks'] = rebuilt_code_blocks
-
-        doc_with_code = perplexity_client.code_injector(doc_wo_code)
-        no_citation_ansi_text = perplexity_client.remove_citations(doc_with_code)
-        print(no_citation_ansi_text)
     except Exception as e:
         print(f"An error occurred: {e}")
         traceback.print_exc() 
+    while True:
+        new_question = False
+        new_question_new_context = False
+        try:
+            if new_question:
+                content = new_question
+            elif new_question_new_context:
+                content = new_question_new_context
+            else:
+                content = get_question()
+            perplexity_client.message_appender("user", content)
+            response = perplexity_client.ask(config)
+            content = response.choices[0].message.content
+            perplexity_client.message_appender("assistant", content)
+            doc_wo_code = perplexity_client.code_extractor(content)
+            
+            doc_no_code_str = doc_wo_code['text'] #doc without code
+            ansi_text = perplexity_client.markdown_to_ansi( ANSI_CODES, config, doc_no_code_str) #doc with no code converted to ansi
+            doc_wo_code['ansi_converted_text'] = ansi_text #adding dict key for ansi converted text
+           
+            code_processing = CodeProcesser()
+            rebuilt_code_blocks = []
+             #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ansi text
+            for code in doc_wo_code['code_blocks']:
+                code_type_and_syntax = code_processing.extract_code_type_and_syntax(code)
+                highlighted_syntax = code_processing.syntax_highlighter(config, code_type_and_syntax)
+                rebuilt_code = code_processing.rebuild_code_type_and_syntax( ANSI_CODES, config, highlighted_syntax)
+                rebuilt_code_blocks.append(rebuilt_code)
+                # replace the original code_blocks with the rebuilt ones
+            doc_wo_code['code_blocks'] = rebuilt_code_blocks
+
+            doc_with_code = perplexity_client.code_injector(doc_wo_code)
+            no_citation_ansi_text = perplexity_client.remove_citations(doc_with_code)
+            print(no_citation_ansi_text)
+
+            follow_up_question = input("Continue this thread ? (y/n) or clear context for follow up question (c)").strip()
+            if follow_up_question == "n":
+                sys.exit(1)
+            elif follow_up_question == "y":
+                new_question = input("Please enter your follow up question: ").strip()
+                return new_question
+            elif follow_up_question == "c":
+                perplexity_client.clear_history()
+                new_question_new_context = input("Please enter a question on a new topic: ").strip()
+                return new_question_new_context
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            traceback.print_exc() 
     
 if __name__ == "__main__":
     main()
-
