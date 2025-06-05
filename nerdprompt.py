@@ -279,8 +279,6 @@ def main():
         print(f"An error occurred: {e}")
         traceback.print_exc() 
     while True:
-        new_question = False
-        new_question_new_context = False
         try:
             if new_question:
                 content = new_question
@@ -317,12 +315,12 @@ def main():
             if follow_up_question == "n":
                 sys.exit(1)
             elif follow_up_question == "y":
+                new_question_new_context = None
                 new_question = input("Please enter your follow up question: ").strip()
-                return new_question
             elif follow_up_question == "c":
                 perplexity_client.clear_history()
+                new_question = None
                 new_question_new_context = input("Please enter a question on a new topic: ").strip()
-                return new_question_new_context
         except Exception as e:
             print(f"An error occurred: {e}")
             traceback.print_exc() 
