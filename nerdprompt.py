@@ -40,37 +40,42 @@ ANSI_CODES = {
     'conceal': '\033[8m',
     'reset': '\033[0m',
     }
+
  
 class PerplexityWrapper:
-    def __init__(self, api_key):
+    def __init__(self, config, api_key):
         self.api_key = api_key
- 
-    def client(self, config,  your_question):
-        messages = [
+        self.messages = [
             {
                 "role": "system",
-                "content": (
-                 f"""{config['system_content']}"""
-                ),
-            },
-            {   
-                "role": "user",
-                "content": (
-                    your_question
-                ),
-            },
+                "content": config['system_content']
+                # f"""{config['system_content']}"""
+            }
         ]
-        
-        client = OpenAI(api_key=self.api_key, base_url=f"{config['llm_url']}")
+ 
+    def ask(self, config):
+           client = OpenAI(api_key=self.api_key, base_url=f"{config['llm_url']}")
+           # chat completion without streaming
+           response = client.chat.completions.create(
+               model = f"{config['llm_model']}",
+               messages = self.messages,
+           #    stream=True, #Streaming disabled
+           )
+           return response
+   
+    def message_appender(self, role, content):
+       """Keep context with this function"""
+       self.messages.append({
+           "role": role,
+           "content": content
+       })
+       return self.messages
     
-        # chat completion without streaming
-        response = client.chat.completions.create(
-            model=f"{config['llm_model']}",
-            messages=messages,
-        #    stream=True, #Streaming disabled
-        )
-        return response
-    
+    def clear_history(self):
+        """Reset conversation while keeping system message"""
+        system_msg = self.messages[0]
+        self.messages = [system_msg]
+
     def markdown_to_ansi(self, ANSI_CODES, config, markdown_text):
         # Define ANSI escape codes for colors and styles
         hash_marks = "#"
@@ -269,10 +274,13 @@ def main():
     config_eater.check_config( ANSI_CODES, config)
 
     try:
-        perplexity_client = PerplexityWrapper(load_api_key())
-        
-        response = perplexity_client.client(config, parse_arguments())
+        perplexity_client = PerplexityWrapper(config, load_api_key())
+
+        content = parse_arguments()
+        perplexity_client.message_appender("user", content)
+        response = perplexity_client.ask(config)
         content = response.choices[0].message.content
+        perplexity_client.message_appender("assistant", content)
         doc_wo_code = perplexity_client.code_extractor(content)
         
         doc_no_code_str = doc_wo_code['text'] #doc without code
@@ -299,4 +307,4 @@ def main():
     
 if __name__ == "__main__":
     main()
- #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ANSI text
+
