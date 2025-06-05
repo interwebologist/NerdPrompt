@@ -269,6 +269,9 @@ def get_question():
 
 def main():
     
+    new_question = ""
+    new_question_new_context = ""
+    
     config_eater = ConfigEater()
     config = config_eater.parse_config()
     config_eater.check_config( ANSI_CODES, config)
