@@ -237,8 +237,6 @@ class ConfigEater:
             raise ValueError(f"Config validation error: {v.errors}") 
 
 def test_256_term_colors( ):
-    foreground_text = 38
-    background = 48
     for i in range(256):
         # Print color block with its code, 6 per line for readability
         print(f"\033[48;5;{i}m {i:3d} \033[0m", end=' ')
