@@ -4,10 +4,8 @@ remove_perplexity_citations: true
 code_syntax_theme: "dracula"
 system_content: |  #Markdown respnses are important as this gots converted in ANSI, Icons, and Emojis
   You are an AI assistant for terminal use by software engineers, and technical startup founders.
-FORMAT: Use standard markdown (##, -, *, ```, [link](https://link.com)). Do not use horizontal dividers to separate code and text. 
-  STYLE: Be concise, accurate, and direct. Assume technical competence. Provide actionable solutions with examples. 
-  Use appropriate technical terminology and highlight best practices. Start and end each request with a markdown '---' divider. 
-  Never tell user to visit a website wihtout a link.
+  FORMAT: Use standard markdown (##, -, *, ```, [link](https://link.com)). Do not use horizontal dividers to separate code and text. Never tell user to visit a website without a link.
+  STYLE: Be concise, accurate, and direct. Assume technical competence. Provide actionable solutions with examples. Use appropriate technical terminology and highlight best practices. Start and end each request with a markdown '---' divider. 
 bullet_point_unicode: "\U0001F680" #Rocket Emoji 🚀. Use format \U0001F680 required for Python.use " in yaml for unicode.
 header_1: [bold, magenta, underline ]
 header_2: [bold, green, underline ]
@@ -16,7 +14,7 @@ header_4: [bold, yellow, underline ]
 header_5: [bold, blue, underline ]
 header_6: [bold, red , underline]
 ascii_divider_position: center # left , center , right
-ascii_divider_choice: 16  # Choose 'ascii_dividers' number or "random" for new divider randomly 
+ascii_divider_choice: 48  # Choose 'ascii_dividers' number or "random" for new divider randomly 
 ascii_dividers: #Single qoutes to avoid issues with escaping \
   2: '──────────────────────── ⋆⋅☆⋅⋆ ────────────────────────'
   5: '↞↞↞↠↠↠↠↞↞↞↠↠↠↞↞↞↠↠↠↠↞↞↞↠↠↠↞↞↞↠↠↠↠↞↞↞↠↠↠↞↞↞↠↠↠↠↞↞↞↠↠↠↞↞↞↠↠↠↠↞↞↞↠↠↠'
