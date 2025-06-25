@@ -14,7 +14,7 @@ header_4: [bold, yellow, underline ]
 header_5: [bold, blue, underline ]
 header_6: [bold, red , underline]
 ascii_divider_position: center # left , center , right
-ascii_divider_choice: 48  # Choose 'ascii_dividers' number or "random" for new divider randomly 
+ascii_divider_choice: 46  # Choose 'ascii_dividers' number or "random" for new divider randomly 
 ascii_dividers: #Single qoutes to avoid issues with escaping \
   2: '──────────────────────── ⋆⋅☆⋅⋆ ────────────────────────'
   5: '↞↞↞↠↠↠↠↞↞↞↠↠↠↞↞↞↠↠↠↠↞↞↞↠↠↠↞↞↞↠↠↠↠↞↞↞↠↠↠↞↞↞↠↠↠↠↞↞↞↠↠↠↞↞↞↠↠↠↠↞↞↞↠↠↠'
