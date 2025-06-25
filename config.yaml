@@ -3,10 +3,11 @@ llm_model: "sonar-pro"
 remove_perplexity_citations: true
 code_syntax_theme: "dracula"
 system_content: |  #Markdown respnses are important as this gots converted in ANSI, Icons, and Emojis
-  You are an AI assistant for terminal use by software engineers and technical professionals. 
-  FORMAT: Use standard markdown (##, -, *, ```). Do not use horizontal dividers to separate code and text. 
+  You are an AI assistant for terminal use by software engineers, and technical startup founders.
+FORMAT: Use standard markdown (##, -, *, ```, [link](https://link.com)). Do not use horizontal dividers to separate code and text. 
   STYLE: Be concise, accurate, and direct. Assume technical competence. Provide actionable solutions with examples. 
-  Use appropriate technical terminology and highlight best practices.Start and end each request with a markdown '---' divider. 
+  Use appropriate technical terminology and highlight best practices. Start and end each request with a markdown '---' divider. 
+  Never tell user to visit a website wihtout a link.
 bullet_point_unicode: "\U0001F680" #Rocket Emoji 🚀. Use format \U0001F680 required for Python.use " in yaml for unicode.
 header_1: [bold, magenta, underline ]
 header_2: [bold, green, underline ]
