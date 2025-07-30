@@ -87,7 +87,9 @@ class PerplexityWrapper:
                 ansi_string = f"\\1{ANSI_CODES['reset']}"
                 for ansi in config[header_name]:
                     ansi_string = f"{ANSI_CODES[str(config[header_name][ansi_count])]}" + ansi_string
+                    #print("DEBUG PRINT:" + ansi_string)
                     ansi_count = ansi_count+1
+
         
             else:
                 ansi_string = f"\\1"
@@ -96,6 +98,8 @@ class PerplexityWrapper:
                                    ansi_string, 
                                    markdown_text)
             hash_marks = "#" + hash_marks
+
+
         
     
         # Convert bold and italic text (***) first to avoid conflicts
@@ -115,7 +119,13 @@ class PerplexityWrapper:
         
         # Divider choice 
         ascii_divider_choice = config['ascii_divider_choice']  
+        
+
         ascii_divider = config["ascii_dividers"][ascii_divider_choice]
+        
+        if config["dividers_color"]:
+            ascii_divider = ANSI_CODES[config['dividers_color']] + ascii_divider + ANSI_CODES[config['dividers_color']] + ANSI_CODES['reset']
+        
         # Divider --- 
         markdown_text = re.sub(r'^---$', rf"{ascii_divider}", markdown_text, flags = re.MULTILINE) 
         # Bullet -  
@@ -185,8 +195,12 @@ class CodeProcesser:
     def rebuild_code_type_and_syntax(self, ANSI_CODES, config, extracted_code):
         code_type = extracted_code['code_type'].capitalize()
         code_syntax = extracted_code['highlighted_code']
-        code_divider_choice = config["code_divider_choice"]
+        code_divider_choice =  config["code_divider_choice"]  
         code_divider = config["code_dividers"][code_divider_choice]
+        if config["code_dividers_color"]:
+            code_divider = ANSI_CODES[config['code_dividers_color']] + code_divider + ANSI_CODES[config['code_dividers_color']] + ANSI_CODES['reset']
+        else:
+            code_divider = config["code_dividers"][code_divider_choice]
         rebuilt_code=f"""\n{code_divider}\n\n{code_type} Code:\n{code_syntax}\n{code_divider}\n"""
         return rebuilt_code
 
@@ -204,6 +218,8 @@ class ConfigEater:
         'llm_url': {'type': 'string', 'required': True},
         'llm_model': {'type': 'string', 'required': True},
         'remove_perplexity_citations': {'type': 'boolean', 'required': True},
+        'dividers_color': {'type': 'string', 'required': True},
+        'code_dividers_color': {'type': 'string', 'required': True},
         'code_syntax_theme': {'type': 'string', 'required': True},
         'system_content': {'type': 'string', 'required': True},
         'bullet_point_unicode': {'type': 'string', 'required': True},
