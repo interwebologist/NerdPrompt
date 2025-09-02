@@ -1,6 +1,8 @@
 llm_url: "https://api.perplexity.ai"
 llm_model: "sonar-pro"
 remove_perplexity_citations: true
+dividers_color: "magenta"
+code_dividers_color: "green"
 code_syntax_theme: "dracula"
 system_content: |  #Markdown respnses are important as this gots converted in ANSI, Icons, and Emojis
   You are an AI assistant for terminal used by software engineers, SRE,  and technical startup founders.
