@@ -13,6 +13,7 @@ import os
 import string 
 import sys
 import re
+import argparse
 
 ANSI_CODES = {
     'bold': '\033[1m',
@@ -260,6 +261,23 @@ def test_256_term_colors( ):
             print()  # Newline after every 12 colors
     print()  # Final newline
 
+def parse_arguments():
+    """Parse command line arguments with argparse"""
+    parser = argparse.ArgumentParser(
+        description='AI-enhanced terminal chat client with custom formatting',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog='''Examples:
+  nerdprompt.py "What is Docker?"                    # Formatted output for humans
+  nerdprompt.py --raw "Explain Python decorators"   # Raw markdown for AI agents
+
+For AI agents: Use --raw flag. Search and follow directions on screen.'''
+    )
+    parser.add_argument('question', nargs='?', 
+                       help='Question to ask the AI (optional, will prompt if not provided)')
+    parser.add_argument('-r', '--raw', action='store_true',
+                       help='output raw markdown (recommended for AI agents)')
+    return parser.parse_args()
+
 def load_api_key():
     """Load API key from environment variables."""
     load_dotenv()
@@ -269,10 +287,10 @@ def load_api_key():
         sys.exit(1)
     return api_key
 
-def get_question():
-    # Check if a question was provided as a command-line argument
-    if len(sys.argv) > 1:
-        return sys.argv[1]
+def get_question(initial_question=None):
+    """Get question from user, either from initial_question or interactive input"""
+    if initial_question:
+        return initial_question
     else:
         # Prompt the user for a question interactively
         question = input("Please enter your follow up question: ").strip()
@@ -282,6 +300,7 @@ def get_question():
         return question
 
 def main():
+    args = parse_arguments()
     
     new_question = ""
     new_question_new_context = ""
@@ -302,33 +321,40 @@ def main():
             elif new_question_new_context:
                 content = new_question_new_context
             else:
-                content = get_question()
+                content = get_question(args.question)
+                args.question = None  # Clear after first use to allow follow-ups
             perplexity_client.message_appender("user", content)
             response = perplexity_client.ask(config)
-            content = response.choices[0].message.content
-            perplexity_client.message_appender("assistant", content)
-            doc_wo_code = perplexity_client.code_extractor(content)
+            raw_content = response.choices[0].message.content
+            perplexity_client.message_appender("assistant", raw_content)
             
-            doc_no_code_str = doc_wo_code['text'] #doc without code
-            ansi_text = perplexity_client.markdown_to_ansi( ANSI_CODES, config, doc_no_code_str) #doc with no code converted to ansi
-            doc_wo_code['ansi_converted_text'] = ansi_text #adding dict key for ansi converted text
-           
-            code_processing = CodeProcesser()
-            rebuilt_code_blocks = []
-             #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ansi text
-            for code in doc_wo_code['code_blocks']:
-                code_type_and_syntax = code_processing.extract_code_type_and_syntax(code)
-                highlighted_syntax = code_processing.syntax_highlighter(config, code_type_and_syntax)
-                rebuilt_code = code_processing.rebuild_code_type_and_syntax( ANSI_CODES, config, highlighted_syntax)
-                rebuilt_code_blocks.append(rebuilt_code)
-                # replace the original code_blocks with the rebuilt ones
-            doc_wo_code['code_blocks'] = rebuilt_code_blocks
+            if args.raw:
+                # Raw output mode - output exactly response.choices[0].message.content
+                print(raw_content)
+            else:
+                # Formatted output mode - existing formatting pipeline
+                doc_wo_code = perplexity_client.code_extractor(raw_content)
+                
+                doc_no_code_str = doc_wo_code['text'] #doc without code
+                ansi_text = perplexity_client.markdown_to_ansi( ANSI_CODES, config, doc_no_code_str) #doc with no code converted to ansi
+                doc_wo_code['ansi_converted_text'] = ansi_text #adding dict key for ansi converted text
+               
+                code_processing = CodeProcesser()
+                rebuilt_code_blocks = []
+                 #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ansi text
+                for code in doc_wo_code['code_blocks']:
+                    code_type_and_syntax = code_processing.extract_code_type_and_syntax(code)
+                    highlighted_syntax = code_processing.syntax_highlighter(config, code_type_and_syntax)
+                    rebuilt_code = code_processing.rebuild_code_type_and_syntax( ANSI_CODES, config, highlighted_syntax)
+                    rebuilt_code_blocks.append(rebuilt_code)
+                    # replace the original code_blocks with the rebuilt ones
+                doc_wo_code['code_blocks'] = rebuilt_code_blocks
 
-            doc_with_code = perplexity_client.code_injector(doc_wo_code)
-            no_citation_ansi_text = perplexity_client.remove_citations(doc_with_code)
-            print(no_citation_ansi_text)
+                doc_with_code = perplexity_client.code_injector(doc_wo_code)
+                no_citation_ansi_text = perplexity_client.remove_citations(doc_with_code)
+                print(no_citation_ansi_text)
 
-            follow_up_question = input("Continue this thread ? (y/n) or clear context for follow up question (c)").strip()
+            follow_up_question = input("y=continue thread; keep context | n=stop; exit | c=clear context; next search starts fresh: ").strip()
             if follow_up_question == "n":
                 sys.exit(1)
             elif follow_up_question == "y":
