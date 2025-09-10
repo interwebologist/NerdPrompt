@@ -46,13 +46,14 @@ ANSI_CODES = {
 class PerplexityWrapper:
     def __init__(self, config, api_key, prompt_type='default'):
         self.api_key = api_key
+        system_prompt = config['system_content'][prompt_type]
         self.messages = [
             {
                 "role": "system",
-                "content": config['system_content'][prompt_type]
+                "content": system_prompt
             }
         ]
- 
+
     def ask(self, config):
            client = OpenAI(api_key=self.api_key, base_url=f"{config['llm_url']}")
            # chat completion without streaming
