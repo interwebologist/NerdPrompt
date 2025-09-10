@@ -44,13 +44,12 @@ ANSI_CODES = {
 
  
 class PerplexityWrapper:
-    def __init__(self, config, api_key):
+    def __init__(self, config, api_key, prompt_type='default'):
         self.api_key = api_key
         self.messages = [
             {
                 "role": "system",
-                "content": config['system_content']
-                # f"""{config['system_content']}"""
+                "content": config['system_content'][prompt_type]
             }
         ]
  
@@ -222,7 +221,7 @@ class ConfigEater:
         'dividers_color': {'type': 'string', 'required': True},
         'code_dividers_color': {'type': 'string', 'required': True},
         'code_syntax_theme': {'type': 'string', 'required': True},
-        'system_content': {'type': 'string', 'required': True},
+        'system_content': {'type': 'dict', 'required': True},
         'bullet_point_unicode': {'type': 'string', 'required': True},
         'header_1': {'type': 'list', 'schema': {'type': 'string'}, 'required': True, 'allowed' : ansi_list},
         'header_2': {'type': 'list', 'schema': {'type': 'string'}, 'required': True, 'allowed' : ansi_list},
@@ -269,6 +268,7 @@ def parse_arguments():
         epilog='''Examples:
   nerdprompt.py "What is Docker?"                    # Formatted output for humans
   nerdprompt.py --raw "Explain Python decorators"   # Raw markdown for AI agents
+  nerdprompt.py -p concise "tell me about the weather"  # Use concise system prompt
 
 For AI agents: Use --raw flag. Search and follow directions on screen.'''
     )
@@ -276,6 +276,8 @@ For AI agents: Use --raw flag. Search and follow directions on screen.'''
                        help='Question to ask the AI (optional, will prompt if not provided)')
     parser.add_argument('-r', '--raw', action='store_true',
                        help='output raw markdown (recommended for AI agents)')
+    parser.add_argument('-p', '--prompt', default='default',
+                       help='system prompt to use (default: default)')
     return parser.parse_args()
 
 def load_api_key():
@@ -310,7 +312,7 @@ def main():
     config_eater.check_config( ANSI_CODES, config)
 
     try:
-        perplexity_client = PerplexityWrapper(config, load_api_key())
+        perplexity_client = PerplexityWrapper(config, load_api_key(), args.prompt)
     except Exception as e:
         print(f"An error occurred: {e}")
         traceback.print_exc() 
