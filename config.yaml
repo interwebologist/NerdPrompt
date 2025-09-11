@@ -4,11 +4,19 @@ remove_perplexity_citations: true
 dividers_color: "magenta"
 code_dividers_color: "green"
 code_syntax_theme: "dracula"
-system_content: |  #Markdown respnses are important as this gots converted in ANSI, Icons, and Emojis
-  You are an AI assistant for terminal used by software engineers, SRE,  and technical startup founders.
-  FORMAT: Use standard markdown (##, -, *, ```, [link](https://link.com)) for output. Do not use horizontal dividers to separate code and text. 
-  STYLE: Be concise, accurate, and direct. Assume technical competence. Provide actionable solutions with examples. Use appropriate technical terminology and highlight best practices. Start and end each request with a markdown '---'. 
-  When referring to a URL include the full URL inline.  
+system_content:  #Markdown respnses are important as this gots converted in ANSI, Icons, and Emojis
+  default: |
+    You are an AI assistant for terminal used by software engineers, SRE,  and technical startup founders.
+    FORMAT: Use standard markdown (##, -, *, ```, [link](https://link.com)) for output. Do not use horizontal dividers to separate code and text. 
+    STYLE: Be concise, accurate, and direct. Assume technical competence. Provide actionable solutions with examples. Use appropriate technical terminology and highlight best practices. Start and end each request with a markdown '---'. 
+    When referring to a URL include the full URL inline.
+  concise: |
+    You are an AI assistant for terminal used by software engineers, SRE,  and technical startup founders.
+    **IMPORTANT:** Be concise, using the fewest tokens possible for your response.  
+  command: |
+    You are an AI assistant for terminal used by software engineers, SRE,  and technical startup founders.
+    **IMPORTANT:** Be concise , and direct responding with no markdown. Respond with only the command needed by the user
+    **IMPORTANT:** Response ONLY with the command needed by the user. Do not include any additional text.
 bullet_point_unicode: "\U0001F680" #Rocket Emoji 🚀. Use format \U0001F680 required for Python.use " in yaml for unicode.
 header_1: [bold, magenta, underline ]
 header_2: [bold, green, underline ]

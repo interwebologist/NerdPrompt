@@ -24,6 +24,7 @@ With Noice installed this will give a popup floating middle of screen before spl
 - Removes citation markers like "[1]" for a cleaner output in perplexity.ai (clickable citations coming)
 - Code syntax highlighting. Choose from common themes. Create your own.
 - Custom horizontal dividers for code blocks.
+- **Multiple system prompt options**: Choose between 'default' (detailed responses) and 'concise' (token-efficient responses) prompts, or add custom prompts in config.yaml
 
 ---
 
@@ -95,11 +96,35 @@ API_KEY=your_api_key_here
 
 ## 🖥️ Usage Instructions
 
+### Basic Usage
 Run the script with your query as an argument:
 
 ```bash
-python nerd_prompt.py "What is the capital of France?"
+python nerdprompt.py "What is the capital of France?"
 ```
+
+### System Prompt Selection
+Choose different response styles with the `-p` flag:
+
+```bash
+# Default prompt (detailed responses)
+python nerdprompt.py "Explain Python decorators"
+
+# Concise prompt (token-efficient responses) 
+python nerdprompt.py -p concise "Explain Python decorators"
+
+# Custom prompt (add your own in config.yaml)
+python nerdprompt.py -p custom "Tell me about the weather"
+```
+
+### Raw Output Mode
+For AI agents or piping to other tools:
+
+```bash
+python nerdprompt.py --raw "What is Docker?"
+python nerdprompt.py -p concise --raw "Explain APIs"
+```
+
 I suggest setting up an alias you can fire of python commands with out activiating the python enviroment like this: 
 
 ```bash
