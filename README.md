@@ -9,6 +9,9 @@
 ![Alt text](images/5.png "Optional title")
 ![Alt text](images/2.png "Optional title")
 
+### No-Thread Mode: Command-Only Response and Exit
+![No-Thread Exit Mode](images/nothread-exit.png "Command-only response with immediate exit")
+
 **In NeoVIM w/ "leader key + np hotkey" [HERE](https://github.com/interwebologist/neovim_config/blob/fd8320c6e7d1a5ed117c335bf4a620bad66f6995/init.lua#L32-L50)**
 With Noice installed this will give a popup floating middle of screen before spliting the screen to run NerdPrompt.
 ![Alt text](images/Neovim1.png "Optional title")
@@ -123,6 +126,19 @@ For AI agents or piping to other tools:
 ```bash
 python nerdprompt.py --raw "What is Docker?"
 python nerdprompt.py -p concise --raw "Explain APIs"
+```
+
+### No Thread Mode
+Exit after showing response without threading capability:
+
+```bash
+# No threading - returns only the answer and exits
+python nerdprompt.py --nothread "What is Python?"
+python nerdprompt.py -n "Explain machine learning"
+
+# Command-only responses (perfect for getting specific commands)
+python nerdprompt.py -p command -n "roll back git commit 1 commit"
+python nerdprompt.py -p command --nothread "list all docker containers"
 ```
 
 I suggest setting up an alias you can fire of python commands with out activiating the python enviroment like this: 
