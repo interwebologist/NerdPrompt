@@ -24,7 +24,7 @@ With Noice installed this will give a popup floating middle of screen before spl
 - Custom Horizontal Dividers 
 - Custom headers. Match your VIM theme colors, underline, etc
 - Supports bold, italic, and bold italic text rendered directly in the terminal.
-- Removes citation markers like "[1]" for a cleaner output in perplexity.ai (clickable citations coming)
+- Removes citation markers like "[1]" for a cleaner output in perplexity.ai 
 - Code syntax highlighting. Choose from common themes. Create your own.
 - Custom horizontal dividers for code blocks.
 - **Multiple system prompt options**: Choose between 'default' (detailed responses) and 'concise' (token-efficient responses) prompts, or add custom prompts in config.yaml
@@ -169,7 +169,7 @@ The tool supports formatting for the Terminal:
 ## 💡 Best Practices
 
 - Keep your API key private—do not share it publicly.
-- Ensure you have sufficient credits in your Perplexity.ai account to make queries.
+- Ensure you have sufficient credits in your Perplexity.ai account to make queries. At time of writing free $5 of credits a month for pro user. plenty, I've never used it all and I mostly using Perplexity via Nerdprompt
 - Use Python 3.8 or higher for compatibility.
 
 ---
