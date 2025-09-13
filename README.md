@@ -2,6 +2,11 @@
 
 **AI formatted for tricked out terminals now with customizable ANSI colors, emoji's, ASCII art dividers, Code detection and code syntax highlighting with follow up questions (Threads)** (Currently tested with Perplexity.AI, should work with ChatGPT, Claude, Cohere)
 
+In the default mode NerdPrompt keeps context while asking follow up questions, but you can clear context to reset the thread topic and keep going.
+Options: 
+-n / -nothread : output the response and nothing else
+-p / -prompt : 'default' , 'concise', 'command', but you can set your own. Default system prompt focuses on colorful output, examples,for the computer professional. 'concise' prompt for shinking answers to fewest tokens possible, and command for only responding with the command you asked for. 
+
 ![Alt text](images/11.png "Optional title")
 ![Alt text](images/10.png "Optional title")
 ![Alt text](images/9.png "Optional title")
