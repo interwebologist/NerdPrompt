@@ -1,6 +1,11 @@
 # 🧠 NerdPrompt
 
-**AI formatted for tricked out terminals now with customizable ANSI colors, emoji's, ASCII art dividers, Code detection and code syntax highlighting with follow up questions (Threads)** (Currently tested with Perplexity.AI, should work with ChatGPT, Claude, Cohere)
+**Colorful AI Chat for Terminal Hackers** — Optimized for Perplexity.AI with rich citations. Features include syntax-highlighted responses, ASCII/Unicode dividers, custom color headers, styled bullets, bold/italic text, and emoji flair. Dracula theme Code/Response by default. Working w/ OpenAI API LLMs. Includes Perplexity-inspired examples
+
+default mode: Keeps context and ask follow up question, or clears context to reset the thread research topic
+Options: 
+-n / -nothread : output the response and nothing else
+-p / -prompt : 'default' , 'concise', 'command', but you can set your own. Default system prompt focuses on colorful output, examples,for the computer professional. 'concise' prompt for shinking answers to fewest tokens possible, and command for only responding with the command you asked for. 
 
 ![Alt text](images/11.png "Optional title")
 ![Alt text](images/10.png "Optional title")
