@@ -159,6 +159,40 @@ python nerdprompt.py --raw "What is Docker?"
 python nerdprompt.py -p concise --raw "Explain APIs"
 ```
 
+### Paste Mode
+For multiline input and code analysis - solves copy-paste repetition issues:
+
+```bash
+# Interactive paste mode - paste content and press Ctrl+D
+python nerdprompt.py --paste
+
+# Pipe files or code directly
+cat script.py | python nerdprompt.py --paste
+echo "def broken():
+    x = 5
+    if x > 3
+        print('broken')" | python nerdprompt.py --paste
+
+# Combine question with code using bash
+(echo "What's wrong with this code?" && cat broken_script.py) | python nerdprompt.py --paste
+echo -e "Optimize this function:\n$(cat my_code.py)" | python nerdprompt.py --paste
+```
+
+**Pro Tip:** Create a bash function for easy code analysis:
+```bash
+# Add to your ~/.bashrc or ~/.zshrc
+analyze() {
+    (echo "$1" && cat "${@:2}") | nerdprompt --paste --nothread
+}
+
+# Usage examples:
+analyze "What's wrong with this code?" broken_script.py
+analyze "Optimize this function" my_code.py
+analyze "Add error handling to:" api_client.py
+```
+
+**Use Case:** Eliminates the issue where copying/pasting multiline content causes the same query to run multiple times.
+
 ### No Thread Mode
 Exit after showing response without threading capability:
 
