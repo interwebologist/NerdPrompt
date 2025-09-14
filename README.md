@@ -15,7 +15,8 @@ In the default mode NerdPrompt keeps context while asking follow up questions, b
 **Options:**
 - `-n` / `--nothread`: Output the response and nothing else
 - `-p` / `--prompt`: 'default', 'concise', 'command', but you can set your own. Default system prompt focuses on colorful output, examples, for the computer professional. 'concise' prompt for shrinking answers to fewest tokens possible, and 'command' for only responding with the command you asked for.
-- `-r` / `--raw`: Output raw markdown without ANSI formatting - perfect for AI agents and piping to other tools 
+- `-r` / `--raw`: Output raw markdown without ANSI formatting - perfect for AI agents and piping to other tools
+- `--paste`: Paste mode for multiline input - accepts piped content or interactive paste (Ctrl+D to finish). Piped input processes content then exits gracefully; interactive paste mode allows follow-up questions. 
 
 ## Screenshots
 

@@ -12,6 +12,26 @@ venv/
 .env
 .env-*
 
+# AI agent directories
+.agent-os/
+.claude/
+
+# Temporary and swap files
+*.swp
+*.swo
+*~
+
+# Vim undo history
+~/.config/nvim/undo/
+
+# Large demo files
+*.gif
+
+# Notes and test files
+notes.txt
+test_*.py
+palette*.png
+
 # Ignore specific files
 
 # Unit test / coverage reports

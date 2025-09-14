@@ -309,6 +309,17 @@ def get_question(initial_question=None, paste_mode=False):
             if not content.strip():
                 print("No content provided via pipe.")
                 sys.exit(1)
+
+            # Reopen stdin to the terminal for follow-up questions
+            try:
+                import os
+                # Try to reopen stdin to the controlling terminal
+                tty_fd = os.open('/dev/tty', os.O_RDONLY)
+                sys.stdin = os.fdopen(tty_fd, 'r')
+            except (OSError, FileNotFoundError):
+                # Mark that we had piped input for later handling
+                sys.stdin.piped_input = True
+
             return content
         else:
             # Interactive paste mode
@@ -397,7 +408,16 @@ def main():
                 sys.exit(0)
             else:
                 formatted_output(perplexity_client, config, raw_content)
-            follow_up_question = input("y=continue thread; keep context | n=stop; exit | c=clear context; next search starts fresh: ").strip()
+
+            try:
+                follow_up_question = input("y=continue thread; keep context | n=stop; exit | c=clear context; next search starts fresh: ").strip()
+            except EOFError:
+                # Handle case where stdin is not available for follow-up input
+                if hasattr(sys.stdin, 'piped_input'):
+                    print("\nPiped input processed. Cannot continue interactive session.")
+                else:
+                    print("\nNo content provided via pipe.")
+                sys.exit(0)
             if follow_up_question == "n":
                 sys.exit(1)
             elif follow_up_question == "y":
