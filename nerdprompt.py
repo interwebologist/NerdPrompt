@@ -270,8 +270,10 @@ def parse_arguments():
   nerdprompt.py "What is Docker?"                    # Formatted output for humans
   nerdprompt.py --raw "Explain Python decorators"   # Raw markdown for AI agents
   nerdprompt.py -p concise "tell me about the weather"  # Use concise system prompt
+  nerdprompt.py --paste                             # Paste mode - read multiline input
+  cat code.py | nerdprompt.py --paste --raw         # Pipe content in paste mode
 
-For AI agents: Use --raw flag. Search and follow directions on screen.'''
+For AI agents: Use --raw flag. For multiline input: Use --paste flag.'''
     )
     parser.add_argument('question', nargs='?', 
                        help='Question to ask the AI (optional, will prompt if not provided)')
@@ -281,6 +283,8 @@ For AI agents: Use --raw flag. Search and follow directions on screen.'''
                        help='system prompt to use (default: default)')
     parser.add_argument('-n', '--nothread', action='store_true',
                        help='no thread mode, return only the last answer')
+    parser.add_argument('--paste', action='store_true',
+                       help='paste mode - read multiline input until EOF (Ctrl+D)')
     return parser.parse_args()
 
 def load_api_key():
@@ -292,10 +296,33 @@ def load_api_key():
         sys.exit(1)
     return api_key
 
-def get_question(initial_question=None):
+def get_question(initial_question=None, paste_mode=False):
     """Get question from user, either from initial_question or interactive input"""
     if initial_question:
         return initial_question
+    elif paste_mode:
+        # Paste mode - read multiline input until EOF
+        # Check if input is being piped
+        if not sys.stdin.isatty():
+            # Content is being piped, read from stdin
+            content = sys.stdin.read()
+            if not content.strip():
+                print("No content provided via pipe.")
+                sys.exit(1)
+            return content
+        else:
+            # Interactive paste mode
+            print("📋 Paste mode - enter your content (press Ctrl+D when done):")
+            try:
+                lines = []
+                while True:
+                    lines.append(input())
+            except EOFError:
+                content = '\n'.join(lines)
+                if not content.strip():
+                    print("No content provided.")
+                    return get_question(paste_mode=paste_mode)
+                return content
     else:
         # Prompt the user for a question interactively
         question = input("Please enter your follow up question: ").strip()
@@ -351,7 +378,7 @@ def main():
             elif new_question_new_context:
                 content = new_question_new_context
             else:
-                content = get_question(args.question)
+                content = get_question(args.question, args.paste)
                 args.question = None  # Clear after first use to allow follow-ups
             perplexity_client.message_appender("user", content)
             response = perplexity_client.ask(config)
@@ -375,11 +402,17 @@ def main():
                 sys.exit(1)
             elif follow_up_question == "y":
                 new_question_new_context = None
-                new_question = input("Please enter your follow up question: ").strip()
+                if args.paste:
+                    new_question = get_question(paste_mode=True)
+                else:
+                    new_question = input("Please enter your follow up question: ").strip()
             elif follow_up_question == "c":
                 perplexity_client.clear_history()
                 new_question = None
-                new_question_new_context = input("Please enter a question on a new topic: ").strip()
+                if args.paste:
+                    new_question_new_context = get_question(paste_mode=True)
+                else:
+                    new_question_new_context = input("Please enter a question on a new topic: ").strip()
         except Exception as e:
             print(f"An error occurred: {e}")
             traceback.print_exc()
