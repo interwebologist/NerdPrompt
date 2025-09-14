@@ -1,5 +1,10 @@
 # 🧠 NerdPrompt
 
+## 🎬 Demo Video
+Click to watch NerdPrompt in action:
+
+https://github.com/interwebologist/NerdPrompt/assets/3302037/NerdPrompt_Examples.mp4
+
 **AI formatted for tricked out terminals now with customizable ANSI colors, emoji's, ASCII art dividers, Code detection and code syntax highlighting with follow up questions (Threads)** (Currently tested with Perplexity.AI, should work with ChatGPT, Claude, Cohere)
 
 In the default mode NerdPrompt keeps context while asking follow up questions, but you can clear context to reset the thread topic and keep going.
