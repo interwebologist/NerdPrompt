@@ -4,7 +4,7 @@
 
 <div align="center">
 
-![NerdPrompt Demo](NerdPrompt_Demo_Sharp.gif)
+![NerdPrompt Demo](NerdPrompt_Demo_Best.gif)
 
 </div>
 
