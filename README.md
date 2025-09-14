@@ -1,10 +1,12 @@
 # 🧠 NerdPrompt
 
-## 🎬 Demo Video
+## 🎬 Demo
 
-Watch NerdPrompt in action:
+<div align="center">
 
-https://github.com/interwebologist/NerdPrompt/raw/main/NerdPrompt_Examples.mp4
+![NerdPrompt Demo](NerdPrompt_Demo.gif)
+
+</div>
 
 **AI formatted for tricked out terminals now with customizable ANSI colors, emojis, ASCII art dividers, code detection and code syntax highlighting with follow up questions (threads)** (Currently tested with Perplexity.AI, should work with ChatGPT, Claude, Cohere)
 
