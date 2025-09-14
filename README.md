@@ -2,14 +2,9 @@
 
 ## 🎬 Demo Video
 
-<div align="center">
+Watch NerdPrompt in action:
 
-<video width="800" controls>
-  <source src="NerdPrompt_Examples.mp4" type="video/mp4">
-  <p>Your browser doesn't support HTML5 video. <a href="NerdPrompt_Examples.mp4">Download the video</a> instead.</p>
-</video>
-
-</div>
+![NerdPrompt Demo](NerdPrompt_Examples.mp4)
 
 **AI formatted for tricked out terminals now with customizable ANSI colors, emojis, ASCII art dividers, code detection and code syntax highlighting with follow up questions (threads)** (Currently tested with Perplexity.AI, should work with ChatGPT, Claude, Cohere)
 
