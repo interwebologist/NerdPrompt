@@ -5,39 +5,59 @@ Click to watch NerdPrompt in action:
 
 https://github.com/interwebologist/NerdPrompt/assets/3302037/NerdPrompt_Examples.mp4
 
-**AI formatted for tricked out terminals now with customizable ANSI colors, emoji's, ASCII art dividers, Code detection and code syntax highlighting with follow up questions (Threads)** (Currently tested with Perplexity.AI, should work with ChatGPT, Claude, Cohere)
+**AI formatted for tricked out terminals now with customizable ANSI colors, emojis, ASCII art dividers, code detection and code syntax highlighting with follow up questions (threads)** (Currently tested with Perplexity.AI, should work with ChatGPT, Claude, Cohere)
 
 In the default mode NerdPrompt keeps context while asking follow up questions, but you can clear context to reset the thread topic and keep going.
-Options: 
--n / -nothread : output the response and nothing else
--p / -prompt : 'default' , 'concise', 'command', but you can set your own. Default system prompt focuses on colorful output, examples,for the computer professional. 'concise' prompt for shinking answers to fewest tokens possible, and command for only responding with the command you asked for. 
 
-![Alt text](images/11.png "Optional title")
-![Alt text](images/10.png "Optional title")
-![Alt text](images/9.png "Optional title")
-![Alt text](images/7.png "Optional title")
-![Alt text](images/5.png "Optional title")
-![Alt text](images/2.png "Optional title")
+**Options:**
+- `-n` / `--nothread`: Output the response and nothing else
+- `-p` / `--prompt`: 'default', 'concise', 'command', but you can set your own. Default system prompt focuses on colorful output, examples, for the computer professional. 'concise' prompt for shrinking answers to fewest tokens possible, and 'command' for only responding with the command you asked for.
+- `-r` / `--raw`: Output raw markdown without ANSI formatting - perfect for AI agents and piping to other tools 
+
+## Screenshots
+
+<div align="center">
+
+<img src="images/11.png" alt="NerdPrompt displaying AI response with custom ANSI colors and formatting" width="700">
+
+<img src="images/10.png" alt="Terminal output showing syntax-highlighted code blocks with custom dividers" width="700">
+
+<img src="images/9.png" alt="Multi-language code examples with Pygments syntax highlighting" width="700">
+
+<img src="images/7.png" alt="Interactive thread mode with follow-up questions and context retention" width="700">
+
+<img src="images/5.png" alt="Custom ASCII art dividers and emoji bullet points in terminal output" width="700">
+
+<img src="images/2.png" alt="Rust OOP examples with dracula theme syntax highlighting" width="700">
+
+</div>
 
 ### No-Thread Mode: Command-Only Response and Exit
-![No-Thread Exit Mode](images/nothread-exit.png "Command-only response with immediate exit")
+<div align="center">
+<img src="images/nothread-exit.png" alt="No-thread mode demonstration showing command-only response with immediate exit" width="700" height="177">
+</div>
 
-**In NeoVIM w/ "leader key + np hotkey" [HERE](https://github.com/interwebologist/neovim_config/blob/fd8320c6e7d1a5ed117c335bf4a620bad66f6995/init.lua#L32-L50)**
-With Noice installed this will give a popup floating middle of screen before spliting the screen to run NerdPrompt.
-![Alt text](images/Neovim1.png "Optional title")
+### NeoVim Integration
+**Set up with "leader key + np hotkey" [HERE](https://github.com/interwebologist/neovim_config/blob/fd8320c6e7d1a5ed117c335bf4a620bad66f6995/init.lua#L32-L50)**
+
+With Noice installed, this provides a popup floating in the middle of the screen before splitting to run NerdPrompt.
+
+<div align="center">
+<img src="images/Neovim1.png" alt="NerdPrompt integration with NeoVim showing popup and split screen functionality" width="700">
+</div>
 
 ---
 
 ## 🚀 Features
 
-- Custom Emoji, ANSI (Colors), or ASCII-enhanced bullet points
-- Custom Horizontal Dividers 
-- Custom headers. Match your VIM theme colors, underline, etc
-- Supports bold, italic, and bold italic text rendered directly in the terminal.
-- Removes citation markers like "[1]" for a cleaner output in perplexity.ai 
-- Code syntax highlighting. Choose from common themes. Create your own.
-- Custom horizontal dividers for code blocks.
-- **Multiple system prompt options**: Choose between 'default' (detailed responses) and 'concise' (token-efficient responses) prompts, or add custom prompts in config.yaml
+- **Custom terminal styling**: Emoji, ANSI colors, or ASCII-enhanced bullet points
+- **Flexible dividers**: Horizontal dividers for content and code blocks
+- **Custom headers**: Match your terminal/vim theme colors with underlines and styling
+- **Rich text formatting**: Bold, italic, and combined formatting rendered in terminal
+- **Clean output**: Removes citation markers like "[1]" for cleaner Perplexity.ai responses
+- **Syntax highlighting**: 40+ Pygments themes for code blocks with custom dividers
+- **Multiple system prompts**: Choose between 'default', 'concise', or 'command' modes, or create custom prompts in config.yaml
+- **Raw output mode**: Perfect for AI agents and integration with other tools
 
 ---
 
@@ -151,10 +171,16 @@ python nerdprompt.py -p command -n "roll back git commit 1 commit"
 python nerdprompt.py -p command --nothread "list all docker containers"
 ```
 
-I suggest setting up an alias you can fire of python commands with out activiating the python enviroment like this: 
+**Pro Tip:** Set up an alias to run commands without activating the Python environment:
 
 ```bash
-/path/to/your/venv/bin/python script.py
+# Add to your ~/.bashrc or ~/.zshrc
+alias nerdprompt="/path/to/your/NerdPrompt/venv/bin/python /path/to/your/NerdPrompt/nerdprompt.py"
+
+# Usage examples:
+nerdprompt "What is Docker?"
+nerdprompt -p concise "Explain APIs"
+nerdprompt -p command -n "list all running processes"
 ```
 
 ---
@@ -178,9 +204,10 @@ The tool supports formatting for the Terminal:
 
 ## 💡 Best Practices
 
-- Keep your API key private—do not share it publicly.
-- Ensure you have sufficient credits in your Perplexity.ai account to make queries. At time of writing free $5 of credits a month for pro user. plenty, I've never used it all and I mostly using Perplexity via Nerdprompt
-- Use Python 3.8 or higher for compatibility.
+- **Security**: Keep your API key private and never share it publicly
+- **Credits**: Ensure sufficient credits in your Perplexity.ai account (Pro users receive $5/month free credits at time of writing)
+- **Compatibility**: Requires Python 3.8 or higher
+- **Performance**: Use virtual environments to isolate dependencies
 
 ---
 
@@ -188,11 +215,13 @@ The tool supports formatting for the Terminal:
 
 If you encounter issues:
 
-1. Ensure your `.env` file contains a valid API key.
-2. Verify that all dependencies are installed (`pip install -r requirements.txt`).
-3. Check your Perplexity.ai account for sufficient credits or active API keys.
+1. **API Key Issues**: Ensure your `.env` file contains a valid API key
+2. **Dependencies**: Verify all dependencies are installed (`pip install -r requirements.txt`)
+3. **Account Status**: Check your Perplexity.ai account for sufficient credits and active API keys
+4. **Python Version**: Confirm you're using Python 3.8 or higher
+5. **Virtual Environment**: Make sure your virtual environment is activated
 
-For further assistance, consult [Perplexity's Help Center](https://www.perplexity.ai/help-center).
+For additional support, consult [Perplexity's Help Center](https://www.perplexity.ai/help-center).
 
 ---
 
