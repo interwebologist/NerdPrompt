@@ -4,7 +4,10 @@
 
 <div align="center">
 
-https://github.com/interwebologist/NerdPrompt/assets/3302037/NerdPrompt_Examples.mp4
+<video width="800" controls>
+  <source src="NerdPrompt_Examples.mp4" type="video/mp4">
+  <p>Your browser doesn't support HTML5 video. <a href="NerdPrompt_Examples.mp4">Download the video</a> instead.</p>
+</video>
 
 </div>
 
