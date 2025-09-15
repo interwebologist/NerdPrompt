@@ -62,3 +62,6 @@ source .venv/bin/activate
 - Minimal tokens in CLAUDE.md while preserving logic
 - Concise technical language only
 - Essential info for code maintenance
+
+**Task Management:**
+- Reflect after each task
