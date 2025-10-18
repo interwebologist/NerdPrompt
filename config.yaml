@@ -1,5 +1,5 @@
 llm_url: "https://api.perplexity.ai"
-llm_model: "sonar-pro"
+llm_model: "sonar" #sonar, sonar-pro, sonar-reasoning, sonar-research-pro, sonar-deep-research
 remove_perplexity_citations: true
 dividers_color: "magenta"
 code_dividers_color: "green"
