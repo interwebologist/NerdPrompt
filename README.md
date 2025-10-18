@@ -27,12 +27,6 @@ In the default mode NerdPrompt keeps context while asking follow up questions, b
 
 <img src="images/9.png" alt="Multi-language code examples with Pygments syntax highlighting" width="700">
 
-<img src="images/7.png" alt="Interactive thread mode with follow-up questions and context retention" width="700">
-
-<img src="images/5.png" alt="Custom ASCII art dividers and emoji bullet points in terminal output" width="700">
-
-<img src="images/2.png" alt="Rust OOP examples with dracula theme syntax highlighting" width="700">
-
 </div>
 
 ### No-Thread Mode: Command-Only Response and Exit
