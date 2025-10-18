@@ -10,10 +10,11 @@ import pygments
 from openai import OpenAI
 import yaml
 import os
-import string 
+import string
 import sys
 import re
 import argparse
+import time
 
 ANSI_CODES = {
     'bold': '\033[1m',
@@ -57,12 +58,15 @@ class PerplexityWrapper:
     def ask(self, config):
            client = OpenAI(api_key=self.api_key, base_url=f"{config['llm_url']}")
            # chat completion without streaming
+           start_time = time.perf_counter()
            response = client.chat.completions.create(
                model = f"{config['llm_model']}",
                messages = self.messages,
            #    stream=True, #Streaming disabled
            )
-           return response
+           end_time = time.perf_counter()
+           api_time = end_time - start_time
+           return response, api_time
    
     def message_appender(self, role, content):
        """Keep context with this function"""
@@ -78,61 +82,64 @@ class PerplexityWrapper:
         self.messages = [system_msg]
 
     def markdown_to_ansi(self, ANSI_CODES, config, markdown_text):
-        # Pre-build ANSI strings for all header levels (O(1) setup)
-        header_ansi = {}
-        for level in range(1, 7):
-            header_name = f"header_{level}"
-            if config[header_name]:
-                ansi_codes_list = config[header_name]
-                # Build ANSI prefix from all codes
-                prefix = ''.join(ANSI_CODES[code] for code in ansi_codes_list)
-                suffix = ANSI_CODES['reset']
-                header_ansi[level] = (prefix, suffix)
-            else:
-                header_ansi[level] = ('', '')
+        # Check if headers exist before processing
+        if '#' in markdown_text:
+            # Pre-build ANSI strings for all header levels (O(1) setup)
+            header_ansi = {}
+            for level in range(1, 7):
+                header_name = f"header_{level}"
+                if config[header_name]:
+                    ansi_codes_list = config[header_name]
+                    # Build ANSI prefix from all codes
+                    prefix = ''.join(ANSI_CODES[code] for code in ansi_codes_list)
+                    suffix = ANSI_CODES['reset']
+                    header_ansi[level] = (prefix, suffix)
+                else:
+                    header_ansi[level] = ('', '')
 
-        # Single-pass regex with callback function (O(n) instead of O(6n))
-        def replace_header(match):
-            hashes = match.group(1)
-            text = match.group(2)
-            level = len(hashes)
-            if level in header_ansi:
-                prefix, suffix = header_ansi[level]
-                return f"{prefix}{text}{suffix}"
-            return match.group(0)
+            # Single-pass regex with callback function (O(n) instead of O(6n))
+            def replace_header(match):
+                hashes = match.group(1)
+                text = match.group(2)
+                level = len(hashes)
+                if level in header_ansi:
+                    prefix, suffix = header_ansi[level]
+                    return f"{prefix}{text}{suffix}"
+                return match.group(0)
 
-        # One regex pass catches ALL header levels at once
-        markdown_text = re.sub(r'(?m)^(#{1,6}) (.+)$', replace_header, markdown_text)
+            # One regex pass catches ALL header levels at once
+            markdown_text = re.sub(r'(?m)^(#{1,6}) (.+)$', replace_header, markdown_text)
 
+        # Check if bold/italic exist before processing
+        if '*' in markdown_text:
+            # Pre-compute ANSI code strings to avoid repeated dict lookups
+            reset = ANSI_CODES['reset']
+            bold_italic = f"{ANSI_CODES['bold_italic']}\\1{reset}"
+            bold = f"{ANSI_CODES['bold']}\\1{reset}"
+            italic = f"{ANSI_CODES['italic']}\\1{reset}"
 
-        
-        # Pre-compute ANSI code strings to avoid repeated dict lookups
-        reset = ANSI_CODES['reset']
-        bold_italic = f"{ANSI_CODES['bold_italic']}\\1{reset}"
-        bold = f"{ANSI_CODES['bold']}\\1{reset}"
-        italic = f"{ANSI_CODES['italic']}\\1{reset}"
+            # Convert bold and italic text (***) first to avoid conflicts
+            markdown_text = re.sub(r'\*\*\*(.+?)\*\*\*', bold_italic, markdown_text)
+            # Convert bold text (**text**)
+            markdown_text = re.sub(r'\*\*(.+?)\*\*', bold, markdown_text)
+            # Convert italic text (*text*)
+            markdown_text = re.sub(r'\*(.+?)\*', italic, markdown_text)
 
-        # Convert bold and italic text (***) first to avoid conflicts
-        markdown_text = re.sub(r'\*\*\*(.+?)\*\*\*', bold_italic, markdown_text)
-        # Convert bold text (**text**)
-        markdown_text = re.sub(r'\*\*(.+?)\*\*', bold, markdown_text)
-        # Convert italic text (*text*)
-        markdown_text = re.sub(r'\*(.+?)\*', italic, markdown_text)
-        
-        # Divider choice 
-        ascii_divider_choice = config['ascii_divider_choice']  
-        
-
+        # Divider choice
+        ascii_divider_choice = config['ascii_divider_choice']
         ascii_divider = config["ascii_dividers"][ascii_divider_choice]
-        
+
         if config["dividers_color"]:
             ascii_divider = ANSI_CODES[config['dividers_color']] + ascii_divider + ANSI_CODES[config['dividers_color']] + ANSI_CODES['reset']
-        
-        # Divider --- 
-        markdown_text = re.sub(r'^---$', rf"{ascii_divider}", markdown_text, flags = re.MULTILINE) 
-        # Bullet -  
-        markdown_text = re.sub(r'^\s*-\s+', f" {config['bullet_point_unicode']} ", markdown_text, flags=re.MULTILINE)
-        
+
+        # Check if divider exists before processing
+        if '---' in markdown_text:
+            markdown_text = re.sub(r'^---$', rf"{ascii_divider}", markdown_text, flags = re.MULTILINE)
+
+        # Check if bullets exist before processing
+        if '\n-' in markdown_text or markdown_text.startswith('-'):
+            markdown_text = re.sub(r'^\s*-\s+', f" {config['bullet_point_unicode']} ", markdown_text, flags=re.MULTILINE)
+
         return markdown_text
     def remove_citations(self, dirty_response):
         
@@ -143,6 +150,10 @@ class PerplexityWrapper:
     # Scrub code from the text to avoid turn comments in headers.
     def code_extractor(self, text):
         code_blocks = []
+
+        # Check if code blocks exist before processing
+        if '```' not in text:
+            return {"text": text, "code_blocks": code_blocks}
 
         pattern = r'```[\s\S]*?```'
         # Find all code blocks in a single pass (O(n) instead of O(k*n))
@@ -345,26 +356,35 @@ def get_question(initial_question=None, paste_mode=False):
 
 def formatted_output(perplexity_client, config, raw_content):
 # Formatted output mode - existing formatting pipeline
+    processing_start = time.perf_counter()
+
     doc_wo_code = perplexity_client.code_extractor(raw_content)
-    
+
     doc_no_code_str = doc_wo_code['text'] #doc without code
     ansi_text = perplexity_client.markdown_to_ansi( ANSI_CODES, config, doc_no_code_str) #doc with no code converted to ansi
     doc_wo_code['ansi_converted_text'] = ansi_text #adding dict key for ansi converted text
-   
-    code_processing = CodeProcesser()
-    rebuilt_code_blocks = []
-     #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ansi text
-    for code in doc_wo_code['code_blocks']:
-        code_type_and_syntax = code_processing.extract_code_type_and_syntax(code)
-        highlighted_syntax = code_processing.syntax_highlighter(config, code_type_and_syntax)
-        rebuilt_code = code_processing.rebuild_code_type_and_syntax( ANSI_CODES, config, highlighted_syntax)
-        rebuilt_code_blocks.append(rebuilt_code)
-        # replace the original code_blocks with the rebuilt ones
-    doc_wo_code['code_blocks'] = rebuilt_code_blocks
+
+    # Only process code blocks if they exist
+    if doc_wo_code['code_blocks']:
+        code_processing = CodeProcesser()
+        rebuilt_code_blocks = []
+         #process code, 1. take apart markdown 2. explict code highlight 2. reconstruct 3 add to ansi text
+        for code in doc_wo_code['code_blocks']:
+            code_type_and_syntax = code_processing.extract_code_type_and_syntax(code)
+            highlighted_syntax = code_processing.syntax_highlighter(config, code_type_and_syntax)
+            rebuilt_code = code_processing.rebuild_code_type_and_syntax( ANSI_CODES, config, highlighted_syntax)
+            rebuilt_code_blocks.append(rebuilt_code)
+            # replace the original code_blocks with the rebuilt ones
+        doc_wo_code['code_blocks'] = rebuilt_code_blocks
 
     doc_with_code = perplexity_client.code_injector(doc_wo_code)
     no_citation_ansi_text = perplexity_client.remove_citations(doc_with_code)
+
+    processing_end = time.perf_counter()
+    processing_time = processing_end - processing_start
+
     print(no_citation_ansi_text)
+    return processing_time
 
 def main():
     args = parse_arguments()
@@ -393,22 +413,35 @@ def main():
                 content = get_question(args.question, args.paste)
                 args.question = None  # Clear after first use to allow follow-ups
             perplexity_client.message_appender("user", content)
-            response = perplexity_client.ask(config)
+            print("🔍 Researching...", end='', flush=True)
+            response, api_time = perplexity_client.ask(config)
+            print(f"\r🔍 Researching... done")
             raw_content = response.choices[0].message.content
             perplexity_client.message_appender("assistant", raw_content)
-            
+
             if args.raw:
                 # Raw output mode - output exactly response.choices[0].message.content
+                processing_start = time.perf_counter()
                 print(raw_content)
+                processing_time = time.perf_counter() - processing_start
+                total_time = api_time + processing_time
+                processing_ms = processing_time * 1000
+                print(f"\nAPI responded in {api_time:.2f}s | Processing took {processing_ms:.2f}ms | Total: {total_time:.2f}s")
                 # Exit immediately if no-thread mode is also specified
                 if args.nothread:
                     sys.exit(0)
             elif args.nothread:
-                formatted_output(perplexity_client, config, raw_content)
+                processing_time = formatted_output(perplexity_client, config, raw_content)
+                total_time = api_time + processing_time
+                processing_ms = processing_time * 1000
+                print(f"\nAPI responded in {api_time:.2f}s | Processing took {processing_ms:.2f}ms | Total: {total_time:.2f}s")
                 # Exit immediately after showing response in no-thread mode
                 sys.exit(0)
             else:
-                formatted_output(perplexity_client, config, raw_content)
+                processing_time = formatted_output(perplexity_client, config, raw_content)
+                total_time = api_time + processing_time
+                processing_ms = processing_time * 1000
+                print(f"\nAPI responded in {api_time:.2f}s | Processing took {processing_ms:.2f}ms | Total: {total_time:.2f}s")
 
             try:
                 follow_up_question = input("y=continue thread; keep context | n=stop; exit | c=clear context; next search starts fresh: ").strip()
