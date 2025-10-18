@@ -157,18 +157,7 @@ python nerdprompt.py -p custom "Tell me about the weather"
 Override the default model from config.yaml:
 
 ```bash
-# Use sonar-pro for complex queries
-python nerdprompt.py -m sonar-pro "Explain quantum computing"
-
-# Use sonar for quick queries
-python nerdprompt.py -m sonar "What is 2+2?"
-
-# Use sonar-reasoning for analytical tasks
-python nerdprompt.py -m sonar-reasoning "Analyze the trade-offs of microservices"
-
-# Combine with other flags
-python nerdprompt.py -m sonar-pro --raw "Explain Docker"
-python nerdprompt.py -m sonar -p concise -n "List Python best practices"
+python nerdprompt.py -m sonar-reasoning -p concise "Analyze the trade-offs of microservices"
 ```
 
 ### Raw Output Mode
