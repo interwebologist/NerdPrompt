@@ -142,18 +142,18 @@ class PerplexityWrapper:
     # Scrub code from the text to avoid turn comments in headers.
     def code_extractor(self, text):
         code_blocks = []
-        code_block_count = 0
-        
+
         pattern = r'```[\s\S]*?```'
-        while True:
-            match = re.search(pattern, text)
-            if match:
-                code_blocks.append(match.group(0))
-                escaped_string = re.escape(match.group(0))
-                text = re.sub(escaped_string, f'<CODE__REMOVED__{code_block_count}>', text, count=1, flags=re.DOTALL)
-                code_block_count = code_block_count+1
-            else:
-                return {"text": text,"code_blocks": code_blocks }
+        # Find all code blocks in a single pass (O(n) instead of O(k*n))
+        matches = list(re.finditer(pattern, text))
+
+        # Replace all matches in reverse order to maintain correct positions
+        for i, match in enumerate(reversed(matches)):
+            code_blocks.insert(0, match.group(0))
+            # Replace from end to start so positions don't shift
+            text = text[:match.start()] + f'<CODE__REMOVED__{len(matches) - 1 - i}>' + text[match.end():]
+
+        return {"text": text, "code_blocks": code_blocks}
 
     # Takes dict with doc and code blocks and puts them back together.
     # Stylize header before this functions or Python comments become headers
