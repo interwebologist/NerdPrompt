@@ -78,45 +78,46 @@ class PerplexityWrapper:
         self.messages = [system_msg]
 
     def markdown_to_ansi(self, ANSI_CODES, config, markdown_text):
-        # Define ANSI escape codes for colors and styles
-        hash_marks = "#"
-        for header in range(6):
-            header = header + 1 
-            header_name = f"header_{header}"
+        # Pre-build ANSI strings for all header levels (O(1) setup)
+        header_ansi = {}
+        for level in range(1, 7):
+            header_name = f"header_{level}"
             if config[header_name]:
-                ansi_count = 0
-                ansi_string = f"\\1{ANSI_CODES['reset']}"
-                for ansi in config[header_name]:
-                    ansi_string = f"{ANSI_CODES[str(config[header_name][ansi_count])]}" + ansi_string
-                    #print("DEBUG PRINT:" + ansi_string)
-                    ansi_count = ansi_count+1
-
-        
+                ansi_codes_list = config[header_name]
+                # Build ANSI prefix from all codes
+                prefix = ''.join(ANSI_CODES[code] for code in ansi_codes_list)
+                suffix = ANSI_CODES['reset']
+                header_ansi[level] = (prefix, suffix)
             else:
-                ansi_string = f"\\1"
-    
-            markdown_text = re.sub(rf'(?m)^{hash_marks} (.+)$', 
-                                   ansi_string, 
-                                   markdown_text)
-            hash_marks = "#" + hash_marks
+                header_ansi[level] = ('', '')
+
+        # Single-pass regex with callback function (O(n) instead of O(6n))
+        def replace_header(match):
+            hashes = match.group(1)
+            text = match.group(2)
+            level = len(hashes)
+            if level in header_ansi:
+                prefix, suffix = header_ansi[level]
+                return f"{prefix}{text}{suffix}"
+            return match.group(0)
+
+        # One regex pass catches ALL header levels at once
+        markdown_text = re.sub(r'(?m)^(#{1,6}) (.+)$', replace_header, markdown_text)
 
 
         
-    
+        # Pre-compute ANSI code strings to avoid repeated dict lookups
+        reset = ANSI_CODES['reset']
+        bold_italic = f"{ANSI_CODES['bold_italic']}\\1{reset}"
+        bold = f"{ANSI_CODES['bold']}\\1{reset}"
+        italic = f"{ANSI_CODES['italic']}\\1{reset}"
+
         # Convert bold and italic text (***) first to avoid conflicts
-        markdown_text = re.sub(r'\*\*\*(.+?)\*\*\*', 
-                               f"{ANSI_CODES['bold_italic']}\\1{ANSI_CODES['reset']}", 
-                               markdown_text)
-    
+        markdown_text = re.sub(r'\*\*\*(.+?)\*\*\*', bold_italic, markdown_text)
         # Convert bold text (**text**)
-        markdown_text = re.sub(r'\*\*(.+?)\*\*', 
-                               f"{ANSI_CODES['bold']}\\1{ANSI_CODES['reset']}", 
-                               markdown_text)
-    
+        markdown_text = re.sub(r'\*\*(.+?)\*\*', bold, markdown_text)
         # Convert italic text (*text*)
-        markdown_text = re.sub(r'\*(.+?)\*', 
-                               f"{ANSI_CODES['italic']}\\1{ANSI_CODES['reset']}", 
-                               markdown_text)
+        markdown_text = re.sub(r'\*(.+?)\*', italic, markdown_text)
         
         # Divider choice 
         ascii_divider_choice = config['ascii_divider_choice']  
@@ -142,18 +143,18 @@ class PerplexityWrapper:
     # Scrub code from the text to avoid turn comments in headers.
     def code_extractor(self, text):
         code_blocks = []
-        code_block_count = 0
-        
+
         pattern = r'```[\s\S]*?```'
-        while True:
-            match = re.search(pattern, text)
-            if match:
-                code_blocks.append(match.group(0))
-                escaped_string = re.escape(match.group(0))
-                text = re.sub(escaped_string, f'<CODE__REMOVED__{code_block_count}>', text, count=1, flags=re.DOTALL)
-                code_block_count = code_block_count+1
-            else:
-                return {"text": text,"code_blocks": code_blocks }
+        # Find all code blocks in a single pass (O(n) instead of O(k*n))
+        matches = list(re.finditer(pattern, text))
+
+        # Replace all matches in reverse order to maintain correct positions
+        for i, match in enumerate(reversed(matches)):
+            code_blocks.insert(0, match.group(0))
+            # Replace from end to start so positions don't shift
+            text = text[:match.start()] + f'<CODE__REMOVED__{len(matches) - 1 - i}>' + text[match.end():]
+
+        return {"text": text, "code_blocks": code_blocks}
 
     # Takes dict with doc and code blocks and puts them back together.
     # Stylize header before this functions or Python comments become headers
