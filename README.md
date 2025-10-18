@@ -15,6 +15,7 @@ In the default mode NerdPrompt keeps context while asking follow up questions, b
 **Options:**
 - `-n` / `--nothread`: Output the response and nothing else
 - `-p` / `--prompt`: 'default', 'concise', 'command', but you can set your own. Default system prompt focuses on colorful output, examples, for the computer professional. 'concise' prompt for shrinking answers to fewest tokens possible, and 'command' for only responding with the command you asked for.
+- `-m` / `--model`: Override the LLM model from config.yaml. Available models: `sonar`, `sonar-pro`, `sonar-reasoning`, `sonar-research-pro`, `sonar-deep-research`
 - `-r` / `--raw`: Output raw markdown without ANSI formatting - perfect for AI agents and piping to other tools
 - `--paste`: Paste mode for multiline input - accepts piped content or interactive paste (Ctrl+D to finish). Piped input processes content then exits gracefully; interactive paste mode allows follow-up questions. 
 
@@ -145,11 +146,18 @@ Choose different response styles with the `-p` flag:
 # Default prompt (detailed responses)
 python nerdprompt.py "Explain Python decorators"
 
-# Concise prompt (token-efficient responses) 
+# Concise prompt (token-efficient responses)
 python nerdprompt.py -p concise "Explain Python decorators"
 
 # Custom prompt (add your own in config.yaml)
 python nerdprompt.py -p custom "Tell me about the weather"
+```
+
+### Model Selection
+Override the default model from config.yaml:
+
+```bash
+python nerdprompt.py -m sonar-reasoning -p concise "Analyze the trade-offs of microservices"
 ```
 
 ### Raw Output Mode

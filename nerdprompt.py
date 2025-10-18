@@ -284,15 +284,19 @@ def parse_arguments():
   nerdprompt.py -p concise "tell me about the weather"  # Use concise system prompt
   nerdprompt.py --paste                             # Paste mode - read multiline input
   cat code.py | nerdprompt.py --paste --raw         # Pipe content in paste mode
+  nerdprompt.py -m sonar-pro "complex query"        # Use sonar-pro model
+  nerdprompt.py -m sonar --raw "simple query"       # Use sonar model with raw output
 
 For AI agents: Use --raw flag. For multiline input: Use --paste flag.'''
     )
-    parser.add_argument('question', nargs='?', 
+    parser.add_argument('question', nargs='?',
                        help='Question to ask the AI (optional, will prompt if not provided)')
     parser.add_argument('-r', '--raw', action='store_true',
                        help='output raw markdown (recommended for AI agents)')
     parser.add_argument('-p', '--prompt', default='default',
                        help='system prompt to use (default: default)')
+    parser.add_argument('-m', '--model', default=None,
+                       help='LLM model to use (options: sonar, sonar-pro, sonar-reasoning, sonar-research-pro, sonar-deep-research). Overrides config.yaml setting')
     parser.add_argument('-n', '--nothread', action='store_true',
                        help='no thread mode, return only the last answer')
     parser.add_argument('--paste', action='store_true',
@@ -396,11 +400,15 @@ def main():
     config = config_eater.parse_config()
     config_eater.check_config( ANSI_CODES, config)
 
+    # Override model from command line if specified
+    if args.model:
+        config['llm_model'] = args.model
+
     try:
         perplexity_client = PerplexityWrapper(config, load_api_key(), args.prompt)
     except Exception as e:
         print(f"An error occurred: {e}")
-        traceback.print_exc() 
+        traceback.print_exc()
         return
         
     while True:
