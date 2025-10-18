@@ -25,7 +25,6 @@ In the default mode NerdPrompt keeps context while asking follow up questions, b
 
 <img src="images/10.png" alt="Terminal output showing syntax-highlighted code blocks with custom dividers" width="700">
 
-<img src="images/9.png" alt="Multi-language code examples with Pygments syntax highlighting" width="700">
 
 </div>
 
