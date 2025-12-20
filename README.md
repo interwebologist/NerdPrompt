@@ -13,11 +13,11 @@
 In the default mode NerdPrompt keeps context while asking follow up questions, but you can clear context to reset the thread topic and keep going.
 
 **Options:**
-- `-n` / `--nothread`: Output the response and nothing else
+- `-n` / `--nothread`: Output the response end execution. Great for quick answers though its easy enough to keep a tmux pane with rolling execution where you clear for new questions or just continue the thread. 
 - `-p` / `--prompt`: 'default', 'concise', 'command', but you can set your own. Default system prompt focuses on colorful output, examples, for the computer professional. 'concise' prompt for shrinking answers to fewest tokens possible, and 'command' for only responding with the command you asked for.
-- `-m` / `--model`: Override the LLM model from config.yaml. Available models: `sonar`, `sonar-pro`, `sonar-reasoning`, `sonar-research-pro`, `sonar-deep-research`
-- `-r` / `--raw`: Output raw markdown without ANSI formatting - perfect for AI agents and piping to other tools
-- `--paste`: Paste mode for multiline input - accepts piped content or interactive paste (Ctrl+D to finish). Piped input processes content then exits gracefully; interactive paste mode allows follow-up questions. 
+- `-m` / `--model`: Overrides the LLM models setting set in config.yaml. Available models: `sonar`, `sonar-pro`, `sonar-reasoning`, `sonar-research-pro`, `sonar-deep-research` if using Perplexity.AI. Check your OpenAPI provider for these values.
+- `-r` / `--raw`: Output raw markdown without NerdPrompt additions - perfect for AI agents web searching tooling. Skips converting for terminal , so faster as well. 
+- `--paste`: Paste mode for multiline input - accepts piped content or interactive paste ('Enter' to skip line after pasted text and Ctrl+D to get response ). Piped input processes content then exits gracefully; interactive paste mode allows follow-up questions. 
 
 ## Screenshots
 
